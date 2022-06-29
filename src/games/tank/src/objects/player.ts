@@ -126,10 +126,10 @@ export class Player extends Phaser.GameObjects.Image {
   //     console.log("Pointer Move");
   // });
     if (this.rotateKeyLeft.isDown) {
-      //this.barrel.rotation -= 0.05;
+      this.barrel.rotation -= 0.05;
       
     } else if (this.rotateKeyRight.isDown) {
-      //this.barrel.rotation += 0.05;
+      this.barrel.rotation += 0.05;
     }
   }
 
@@ -144,11 +144,19 @@ export class Player extends Phaser.GameObjects.Image {
         ease: 'Power1',
         easeParams: null,
         hold: 0,
-        repeat: -1,
+        repeat: 0,
         repeatDelay: 0,
         yoyo: true,
         paused: false
       });
+      this.scene.tweens.add({
+        targets: this.barrel,
+        ease: 'Power3',
+        scaleX: 1.5,
+        scaleY: 1.5,
+        yoyo: true,
+        repeat: 0
+      })
 
       if (this.bullets.getLength() < 10) {
         this.bullets.add(
@@ -161,7 +169,7 @@ export class Player extends Phaser.GameObjects.Image {
           })
         );
 
-        this.lastShoot = this.scene.time.now + 80;
+        this.lastShoot = this.scene.time.now + 100;
       }
     }
   }

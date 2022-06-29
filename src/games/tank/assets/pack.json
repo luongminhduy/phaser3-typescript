@@ -14,6 +14,11 @@
       },
       {
         "type": "image",
+        "key": "red",
+        "url": "./assets/particles/red.png"
+      },
+      {
+        "type": "image",
         "key": "tankBlue",
         "url": "./assets/sprites/tank-blue.png"
       },

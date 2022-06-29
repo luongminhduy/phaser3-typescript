@@ -10,7 +10,7 @@ export class Player extends Phaser.GameObjects.Image {
   private speed: number;
 
   // children
-  private barrel: Phaser.GameObjects.Image;
+  barrel: Phaser.GameObjects.Image;
   private lifeBar: Phaser.GameObjects.Graphics;
 
   // game objects
@@ -44,7 +44,7 @@ export class Player extends Phaser.GameObjects.Image {
     this.setDepth(0);
     this.angle = 180;
 
-    this.barrel = this.scene.add.image(this.x, this.y, 'barrelBlue');
+    this.barrel = this.scene.physics.add.image(this.x, this.y, 'barrelBlue');
     this.barrel.setOrigin(0.5, 1);
     this.barrel.setDepth(1);
     this.barrel.angle = 180;
@@ -95,33 +95,41 @@ export class Player extends Phaser.GameObjects.Image {
     // move tank forward
     // small corrections with (- MATH.PI / 2) to align tank correctly
     if (this.cursors.up.isDown) {
-      this.scene.physics.velocityFromRotation(
-        this.rotation - Math.PI / 2,
-        this.speed,
-        this.body.velocity
-      );
+      // this.scene.physics.velocityFromRotation(
+      //   this.rotation - Math.PI / 2,
+      //   this.speed,
+      //   this.body.velocity
+      // );
+      this.body.setVelocityY(-200);
     } else if (this.cursors.down.isDown) {
-      this.scene.physics.velocityFromRotation(
-        this.rotation - Math.PI / 2,
-        -this.speed,
-        this.body.velocity
-      );
-    } else {
+      // this.scene.physics.velocityFromRotation(
+      //   this.rotation - Math.PI / 2,
+      //   -this.speed,
+      //   this.body.velocity
+      // );
+      this.body.setVelocityY(200);
+    }
+    else if (this.cursors.right.isDown) {
+      this.body.setVelocityX(200);
+    }
+    else if (this.cursors.left.isDown) {
+      this.body.setVelocityX(-200);
+    }
+    else {
       this.body.setVelocity(0, 0);
     }
 
     // rotate tank
-    if (this.cursors.left.isDown) {
-      this.rotation -= 0.02;
-    } else if (this.cursors.right.isDown) {
-      this.rotation += 0.02;
-    }
 
     // rotate barrel
+  //   this.scene.input.on('pointermove', ()=> {
+  //     console.log("Pointer Move");
+  // });
     if (this.rotateKeyLeft.isDown) {
-      this.barrel.rotation -= 0.05;
+      //this.barrel.rotation -= 0.05;
+      
     } else if (this.rotateKeyRight.isDown) {
-      this.barrel.rotation += 0.05;
+      //this.barrel.rotation += 0.05;
     }
   }
 
@@ -136,7 +144,7 @@ export class Player extends Phaser.GameObjects.Image {
         ease: 'Power1',
         easeParams: null,
         hold: 0,
-        repeat: 0,
+        repeat: -1,
         repeatDelay: 0,
         yoyo: true,
         paused: false

@@ -24,6 +24,9 @@ export class GameScene extends Phaser.Scene {
 
     // set background color
     this.cameras.main.setBackgroundColor(0x78aade);
+    this.cameras.main.centerOn(225, 290);
+
+    //this.cameras.main.x -= 100;
 
     // Init grid with tiles
     this.tileGrid = [];
@@ -76,6 +79,15 @@ export class GameScene extends Phaser.Scene {
     if (this.canMove) {
       if (!this.firstSelectedTile) {
         this.firstSelectedTile = gameobject;
+        //this.firstSelectedTile.angle += 20;
+        this.add.tween({
+          targets: this.firstSelectedTile,
+          ease: 'Linear',
+          duration: 2000,
+          angle: 360,
+          repeat: -1,
+          yoyo: false
+        });
       } else {
         // So if we are here, we must have selected a second tile
         this.secondSelectedTile = gameobject;
@@ -91,6 +103,9 @@ export class GameScene extends Phaser.Scene {
         if ((dx === 1 && dy === 0) || (dx === 0 && dy === 1)) {
           this.canMove = false;
           this.swapTiles();
+        }
+        else {
+          this.firstSelectedTile = this.secondSelectedTile;
         }
       }
     }

@@ -3,6 +3,11 @@
     "files": [
       {
         "type": "image",
+        "key": "red",
+        "url": "./assets/images/red.png"
+      },
+      {
+        "type": "image",
         "key": "cookie1",
         "url": "./assets/images/cookie1.png"
       },

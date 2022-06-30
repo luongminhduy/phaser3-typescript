@@ -1,3 +1,4 @@
+import { BlendModes } from 'phaser';
 import { CONST } from '../const/const';
 import { Tile } from '../objects/tile';
 
@@ -11,6 +12,10 @@ export class GameScene extends Phaser.Scene {
   // Selected Tiles
   private firstSelectedTile: Tile;
   private secondSelectedTile: Tile;
+  private tween: Phaser.Tweens.Tween;
+  private isRotate: boolean = false;
+  private particles: any;
+  private emitter: any;
 
   constructor() {
     super({
@@ -47,7 +52,26 @@ export class GameScene extends Phaser.Scene {
     // Check if matches on the start
     this.checkMatches();
   }
-
+  // update(time: number, delta: number): void {
+  //   if (this.firstSelectedTile) {
+  //     this.tween = this.add.tween({
+  //       targets:  this.firstSelectedTile,
+  //       ease: 'Linear',
+  //       duration: 1500,
+  //       angle: 360,
+  //       repeat: 1,
+  //       yoyo: false
+  //     });
+  //   }
+  // }
+  create() {
+  //   this.particles = this.add.particles('red');
+  //   this.emitter = this.particles.createEmitter({
+  //     speed: 100,
+  //     scale: { start: 1, end: 0 },
+  //     BlendModes: 'Add'
+  // });
+  }
   /**
    * Add a new random tile at the specified position.
    * @param x
@@ -79,15 +103,15 @@ export class GameScene extends Phaser.Scene {
     if (this.canMove) {
       if (!this.firstSelectedTile) {
         this.firstSelectedTile = gameobject;
-        //this.firstSelectedTile.angle += 20;
-        this.add.tween({
+        this.tween = this.tweens.add({
           targets: this.firstSelectedTile,
-          ease: 'Linear',
-          duration: 2000,
           angle: 360,
-          repeat: -1,
-          yoyo: false
-        });
+          ease: 'Power0',
+          //duration: 2000,
+          repeat: -1
+      });
+        //this.emitter.startFollow(this.firstSelectedTile);
+        //this.firstSelectedTile.angle += 20;
       } else {
         // So if we are here, we must have selected a second tile
         this.secondSelectedTile = gameobject;
@@ -106,6 +130,15 @@ export class GameScene extends Phaser.Scene {
         }
         else {
           this.firstSelectedTile = this.secondSelectedTile;
+          this.tween.restart();
+          this.tween.stop();
+          this.tween = this.tweens.add({
+            targets: this.firstSelectedTile,
+            angle: 360,
+            ease: 'Power0',
+            //duration: 2000,
+            repeat: -1
+        });
         }
       }
     }
@@ -189,6 +222,10 @@ export class GameScene extends Phaser.Scene {
       this.swapTiles();
       this.tileUp();
       this.canMove = true;
+      if (this.tween) {
+        this.tween.restart();
+        this.tween.stop();
+      }
     }
   }
 

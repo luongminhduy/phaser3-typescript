@@ -52,25 +52,24 @@ export class GameScene extends Phaser.Scene {
     // Check if matches on the start
     this.checkMatches();
   }
-  // update(time: number, delta: number): void {
-  //   if (this.firstSelectedTile) {
-  //     this.tween = this.add.tween({
-  //       targets:  this.firstSelectedTile,
-  //       ease: 'Linear',
-  //       duration: 1500,
-  //       angle: 360,
-  //       repeat: 1,
-  //       yoyo: false
-  //     });
-  //   }
-  // }
+  update(time: number, delta: number): void {
+    
+  }
   create() {
-  //   this.particles = this.add.particles('red');
-  //   this.emitter = this.particles.createEmitter({
-  //     speed: 100,
-  //     scale: { start: 1, end: 0 },
-  //     BlendModes: 'Add'
-  // });
+    this.particles = this.add.particles('red');
+    this.emitter = this.particles.createEmitter({
+      x: 400,
+      y: 300,
+      speed: { min: -200, max: 200 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 1, end: 0 },
+      blendMode: 'SCREEN',
+      //active: false,
+      lifespan: 400,
+      gravityY: 800
+    });
+    if(this.firstSelectedTile) this.emitter.startFollow(this.firstSelectedTile);
+    this.emitter.stop();
   }
   /**
    * Add a new random tile at the specified position.
@@ -211,12 +210,27 @@ export class GameScene extends Phaser.Scene {
     if (matches.length > 0) {
       //Remove the tiles
       this.removeTileGroup(matches);
+      //start emitter
+      if (this.firstSelectedTile)
+        this.emitter.setPosition(this.secondSelectedTile.x, this.secondSelectedTile.y);
+      if (this.emitter) this.emitter.start();
       // Move the tiles currently on the board into their new positions
-      this.resetTile();
+      this.time.addEvent({
+        delay: 100,
+        callback: () => {
+          this.emitter.stop();
+          this.resetTile();
+          this.fillTile();
+          this.tileUp();
+          this.checkMatches();
+        },
+        loop: false
+      })
+      //this.resetTile();
       //Fill the board with new tiles wherever there is an empty spot
-      this.fillTile();
-      this.tileUp();
-      this.checkMatches();
+      // this.fillTile();
+      // this.tileUp();
+      // this.checkMatches();
     } else {
       // No match so just swap the tiles back to their original position and reset
       this.swapTiles();

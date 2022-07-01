@@ -65,7 +65,7 @@ export class GameScene extends Phaser.Scene {
       scale: { start: 1, end: 0 },
       blendMode: 'SCREEN',
       //active: false,
-      lifespan: 400,
+      lifespan: 300,
       gravityY: 800
     });
     if(this.firstSelectedTile) this.emitter.startFollow(this.firstSelectedTile);
@@ -211,12 +211,13 @@ export class GameScene extends Phaser.Scene {
       //Remove the tiles
       this.removeTileGroup(matches);
       //start emitter
+
       if (this.firstSelectedTile)
         this.emitter.setPosition(this.secondSelectedTile.x, this.secondSelectedTile.y);
       if (this.emitter) this.emitter.start();
       // Move the tiles currently on the board into their new positions
       this.time.addEvent({
-        delay: 100,
+        delay: 300,
         callback: () => {
           this.emitter.stop();
           this.resetTile();

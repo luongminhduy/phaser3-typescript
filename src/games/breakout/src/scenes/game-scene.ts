@@ -26,7 +26,7 @@ export class GameScene extends Phaser.Scene {
   init(): void {
     settings.highScore = settings.score;
     settings.score = 0;
-    settings.lives = 3;
+    settings.lives = 1;
   }
 
   create(): void {
@@ -34,18 +34,6 @@ export class GameScene extends Phaser.Scene {
     // ------------
 
     this.particles = this.add.particles('red');
-    // this.emitter = this.particles.createEmitter({
-    //   x: 400,
-    //   y: 300,
-    //   speed: { min: -200, max: 200 },
-    //   angle: { min: 0, max: 360 },
-    //   scale: { start: 1, end: 0 },
-    //   blendMode: 'SCREEN',
-    //   //active: false,
-    //   lifespan: 300,
-    //   gravityY: 800
-    // });
-    // bricks
     this.bricks = this.add.group();
 
     const BRICKS = settings.LEVELS[settings.currentLevel].BRICKS;
@@ -90,12 +78,12 @@ export class GameScene extends Phaser.Scene {
         accelerationY: -300,
         angle: { min: -85, max: -95 },
         rotate: { min: -180, max: 180 },
-        lifespan: { min: 1000, max: 1100 },
+        lifespan: { min: 400, max: 500 },
         blendMode: 'ADD',
-        frequency: 110,
+        frequency: 60,
         //maxParticles: 10,
-        x: 400,
-        y: 300
+        x: -100,
+        y: -100
     });
     //this.emitter.follow(this.ball);
     // score
@@ -147,7 +135,7 @@ export class GameScene extends Phaser.Scene {
   update(): void {
     this.player.update();
 
-    if (this.player.body.velocity.x !== 0 && !this.ball.visible) {
+    if (!this.ball.visible) {
       this.ball.setPosition(this.player.x, this.player.y - 200);
       this.ball.applyInitVelocity();
       this.ball.setVisible(true);
@@ -167,7 +155,7 @@ export class GameScene extends Phaser.Scene {
         this.ball.setVisible(false);
       }
     }
-    if (this.ball) {
+    if (this.ball && this.ball.x != 0 && this.ball.y != 0) {
       if (this.emitter)
         this.emitterSmoke.setPosition(this.ball.x, this.ball.y);
     }

@@ -29,7 +29,7 @@ export class Player extends Phaser.GameObjects.Rectangle {
   private initPhysics(): void {
     this.scene.physics.world.enable(this);
     this.body.setCollideWorldBounds();
-    this.body.setDragX(300);
+    //this.body.setDragX(300);
     this.body.setImmovable(true);
   }
 
@@ -43,9 +43,11 @@ export class Player extends Phaser.GameObjects.Rectangle {
 
   private handleInput(): void {
     if (this.cursors.right.isDown) {
-      this.body.setVelocityX(300);
+      //this.body.setVelocityX(300);
+      this.body.x += 3;
     } else if (this.cursors.left.isDown) {
-      this.body.setVelocityX(-300);
+      //this.body.setVelocityX(-300);
+      this.body.x -= 3;
     }
   }
 

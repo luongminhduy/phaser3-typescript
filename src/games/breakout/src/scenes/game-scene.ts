@@ -16,6 +16,7 @@ export class GameScene extends Phaser.Scene {
   private emitter: Phaser.GameObjects.Particles.ParticleEmitter;
   private particlesSmoke: Phaser.GameObjects.Particles.ParticleEmitterManager;
   private emitterSmoke: Phaser.GameObjects.Particles.ParticleEmitter;
+  private scoreTween: Phaser.Tweens.Tween;
 
   constructor() {
     super({
@@ -94,7 +95,16 @@ export class GameScene extends Phaser.Scene {
       `Score: ${settings.score}`,
       8
     );
-
+    //this.scoreText.setFontSize(1);
+    this.scoreTween = this.tweens.add({
+      targets: this.scoreText,
+      font: 20,
+      props: {
+        font: 200
+      },
+      x: 100,
+      yoyo: true
+    });
     this.highScoreText = this.add.bitmapText(
       10,
       20,
@@ -110,6 +120,7 @@ export class GameScene extends Phaser.Scene {
       `Lives: ${settings.lives}`,
       8
     );
+    
 
     // collisions
     // ----------

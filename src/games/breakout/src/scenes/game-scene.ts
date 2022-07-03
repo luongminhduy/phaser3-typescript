@@ -12,6 +12,10 @@ export class GameScene extends Phaser.Scene {
   private scoreText: Phaser.GameObjects.BitmapText;
   private highScoreText: Phaser.GameObjects.BitmapText;
   private livesText: Phaser.GameObjects.BitmapText;
+  private particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
+  private emitter: Phaser.GameObjects.Particles.ParticleEmitter;
+  private particlesSmoke: Phaser.GameObjects.Particles.ParticleEmitterManager;
+  private emitterSmoke: Phaser.GameObjects.Particles.ParticleEmitter;
 
   constructor() {
     super({
@@ -29,6 +33,18 @@ export class GameScene extends Phaser.Scene {
     // game objects
     // ------------
 
+    this.particles = this.add.particles('red');
+    // this.emitter = this.particles.createEmitter({
+    //   x: 400,
+    //   y: 300,
+    //   speed: { min: -200, max: 200 },
+    //   angle: { min: 0, max: 360 },
+    //   scale: { start: 1, end: 0 },
+    //   blendMode: 'SCREEN',
+    //   //active: false,
+    //   lifespan: 300,
+    //   gravityY: 800
+    // });
     // bricks
     this.bricks = this.add.group();
 
@@ -63,7 +79,25 @@ export class GameScene extends Phaser.Scene {
 
     // ball
     this.ball = new Ball({ scene: this, x: 0, y: 0 }).setVisible(false);
+    //smoke of ball
+    this.particlesSmoke = this.add.particles('smoke');
 
+    this.emitterSmoke = this.particlesSmoke.createEmitter({
+        alpha: { start: 1, end: 0 },
+        scale: { start: 0.5, end: 2.5 },
+        //tint: { start: 0xff945e, end: 0xff945e },
+        speed: 20,
+        accelerationY: -300,
+        angle: { min: -85, max: -95 },
+        rotate: { min: -180, max: 180 },
+        lifespan: { min: 1000, max: 1100 },
+        blendMode: 'ADD',
+        frequency: 110,
+        //maxParticles: 10,
+        x: 400,
+        y: 300
+    });
+    //this.emitter.follow(this.ball);
     // score
     this.scoreText = this.add.bitmapText(
       10,
@@ -133,10 +167,30 @@ export class GameScene extends Phaser.Scene {
         this.ball.setVisible(false);
       }
     }
+    if (this.ball) {
+      if (this.emitter)
+        this.emitterSmoke.setPosition(this.ball.x, this.ball.y);
+    }
   }
 
   private ballBrickCollision(ball: Ball, brick: Brick): void {
     brick.destroy();
+    if (this.emitter) this.emitter.stop();
+    this.emitter = this.particles.createEmitter({
+      x: brick.x + brick.width/2,
+      y: brick.y + brick.height/2,
+      speed: { min: -200, max: 200 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 1, end: 0 },
+      blendMode: 'SCREEN',
+      //active: false,
+      lifespan: 300,
+      gravityY: 800
+    });
+    this.time.addEvent({
+      delay: 1000,
+      callback: () => {this.emitter.stop()}
+    });
     settings.score += 10;
     this.events.emit('scoreChanged');
 

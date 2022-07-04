@@ -8,7 +8,7 @@ export class GameScene extends Phaser.Scene {
   private loadingBarTween: Phaser.Tweens.Tween;
   private particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
   private emitter: Phaser.GameObjects.Particles.ParticleEmitter;
-
+  private rotateTween:  Phaser.Tweens.Tween;
   constructor() {
     super({
       key: 'GameScene'
@@ -23,6 +23,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   create(): void {
+    
     this.loadingBar = this.add
       .rectangle(
         0,
@@ -62,7 +63,7 @@ export class GameScene extends Phaser.Scene {
             settings.BLOCK_WIDTH,
             0xff2463
           )
-          .setOrigin(0);
+          .setOrigin(0.5);
 
         this.physics.world.enable(this.player);
       }
@@ -87,6 +88,13 @@ export class GameScene extends Phaser.Scene {
       null,
       this
     );
+    //add tweens
+    this.rotateTween = this.tweens.add({
+      targets: this.player,
+      angle: 360,
+      paused: true,
+      repeat: -1
+    })
 
     // setup input
     this.input.on(
@@ -108,6 +116,7 @@ export class GameScene extends Phaser.Scene {
       +this.game.config.height
     );
     this.cameras.main.startFollow(this.player);
+    this.player.setOrigin(0.5, 0.5);
   }
 
   update(): void {
@@ -154,7 +163,7 @@ export class GameScene extends Phaser.Scene {
         towerHeight,
         settings.TOWER_PROPERTIES.COLOR
       )
-      .setOrigin(0);
+      .setOrigin(0.5, 0);
 
     // add physics to tower
     this.physics.world.enable(newTower);
@@ -170,6 +179,8 @@ export class GameScene extends Phaser.Scene {
     if (!this.isPlayerJumping) {
       const playerBody = this.player.body as Phaser.Physics.Arcade.Body;
       playerBody.setVelocityY(-this.loadingBar.width);
+      this.rotateTween.play();
+      if (this.rotateTween) this.rotateTween.resume();
       this.isPlayerJumping = true;
       this.loadingBarTween.stop();
       this.loadingBar.width = 0;
@@ -179,6 +190,7 @@ export class GameScene extends Phaser.Scene {
   private playerTowerCollision(player: any, tower: any): void {
     if (tower.body.touching.up) {
       player.body.setVelocity(0);
+      this.rotateTween.pause();
       this.emitter.stop();
       this.isPlayerJumping = false;
     }

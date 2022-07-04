@@ -98,23 +98,22 @@ export class GameScene extends Phaser.Scene {
     //this.scoreText.setFontSize(1);
     this.scoreTween = this.tweens.add({
       targets: this.scoreText,
-      font: 20,
-      props: {
-        font: 200
-      },
-      x: 100,
-      yoyo: true
+      scaleX: 1.5,
+      scaleY: 1.5,
+      ease: 'Bounce.easeOut',
+      yoyo: true,
+      paused: true
     });
     this.highScoreText = this.add.bitmapText(
       10,
-      20,
+      30,
       'font',
       `Highscore: ${settings.highScore}`,
       8
     );
 
     this.livesText = this.add.bitmapText(
-      10,
+      200,
       30,
       'font',
       `Lives: ${settings.lives}`,
@@ -190,6 +189,7 @@ export class GameScene extends Phaser.Scene {
       delay: 1000,
       callback: () => {this.emitter.stop()}
     });
+    this.scoreTween.play();
     settings.score += 10;
     this.events.emit('scoreChanged');
 

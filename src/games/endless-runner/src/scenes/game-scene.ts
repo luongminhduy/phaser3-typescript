@@ -6,16 +6,20 @@ export class GameScene extends Phaser.Scene {
   private isPlayerJumping: boolean;
   private loadingBar: Phaser.GameObjects.Rectangle;
   private loadingBarTween: Phaser.Tweens.Tween;
+  private particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
+  private emitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
   constructor() {
     super({
       key: 'GameScene'
     });
   }
-
   init(): void {
     this.isPlayerJumping = false;
     settings.createTowerXPosition = 0;
+  }
+  preload() {
+    this.load.image('red', './assets/images/red.png');
   }
 
   create(): void {
@@ -63,7 +67,18 @@ export class GameScene extends Phaser.Scene {
         this.physics.world.enable(this.player);
       }
     }
-
+    this.particles = this.add.particles('red');
+    this.emitter = this.particles.createEmitter({
+      x: this.player.x + this.player.width/2,
+      y: this.player.y + this.player.height,
+      speed: { min: -200, max: 200 },
+      angle: { min: 300, max: 300 },
+      scale: { start: 0.5, end: 0.8 },
+      blendMode: 'SCREEN',
+      lifespan: 500,
+      on: false,
+      maxParticles: 500
+    });
     // add colliders
     this.physics.add.collider(
       this.player,
@@ -78,7 +93,7 @@ export class GameScene extends Phaser.Scene {
       'pointerdown',
       () => {
         if (!this.isPlayerJumping) {
-          this.loadingBarTween.restart();
+          this.loadingBarTween.restart();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
         }
       },
       this
@@ -96,10 +111,13 @@ export class GameScene extends Phaser.Scene {
   }
 
   update(): void {
+    //this.emitter.setPosition(this.player.x + this.player.width/2, this.player.y + this.player.height);
     this.towers.getChildren().forEach((tower) => {
       const towerBody = tower.body as Phaser.Physics.Arcade.Body;
       if (this.isPlayerJumping) {
         towerBody.setVelocityX(settings.SCROLLING_SPEED_X_AXIS);
+        this.emitter.start();
+        this.emitter.setPosition(this.player.x + this.player.width/2, this.player.y + this.player.height);
       } else {
         towerBody.setVelocityX(0);
       }
@@ -161,6 +179,7 @@ export class GameScene extends Phaser.Scene {
   private playerTowerCollision(player: any, tower: any): void {
     if (tower.body.touching.up) {
       player.body.setVelocity(0);
+      this.emitter.stop();
       this.isPlayerJumping = false;
     }
   }

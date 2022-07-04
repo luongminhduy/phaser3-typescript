@@ -1,0 +1,22 @@
+{
+  "preload": {
+    "files": [
+      {
+        "type": "image",
+        "key": "red",
+        "url": "./assets/images/red.png"
+      },
+      {
+        "type": "image",
+        "key": "smoke",
+        "url": "./assets/images/smoke.png"
+      },
+      {
+        "type": "bitmapFont",
+        "key": "font",
+        "textureURL": "./assets/font/font.png",
+        "fontDataURL": "./assets/font/font.fnt"
+      }
+    ]
+  }
+}

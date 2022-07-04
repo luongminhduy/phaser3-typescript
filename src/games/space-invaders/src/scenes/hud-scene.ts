@@ -1,5 +1,7 @@
 export class HUDScene extends Phaser.Scene {
   private bitmapTexts: Phaser.GameObjects.BitmapText[];
+  private scoreTween: Phaser.Tweens.Tween;
+  private scoreText: Phaser.GameObjects.BitmapText;
 
   constructor() {
     super({
@@ -23,7 +25,7 @@ export class HUDScene extends Phaser.Scene {
       )
     );
     this.bitmapTexts.push(
-      this.add.bitmapText(
+      this.scoreText = this.add.bitmapText(
         10,
         10,
         'font',
@@ -31,6 +33,16 @@ export class HUDScene extends Phaser.Scene {
         8
       )
     );
+    //score tweens
+    this.scoreTween = this.add.tween({
+      targets: this.scoreText,
+      scaleX: 1.5,
+      scaleY: 1.5,
+      ease: 'Cubic.easeOut',
+      yoyo: true,
+      paused: true,
+      duration: 300
+    })
 
     // create events
     const level = this.scene.get('GameScene');
@@ -40,6 +52,7 @@ export class HUDScene extends Phaser.Scene {
 
   private updatePoints() {
     this.bitmapTexts[1].setText(`Points: ${this.registry.get('points')}`);
+    this.scoreTween.play();
   }
 
   private updateLives() {

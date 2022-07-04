@@ -5,7 +5,8 @@ import { Bullet } from '../objects/bullet';
 export class GameScene extends Phaser.Scene {
   private enemies: Phaser.GameObjects.Group;
   private player: Player;
-
+  private particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
+  private emitter: Phaser.GameObjects.Particles.ParticleEmitter;
   constructor() {
     super({
       key: 'GameScene'
@@ -14,10 +15,12 @@ export class GameScene extends Phaser.Scene {
 
   init(): void {
     this.enemies = this.add.group({ runChildUpdate: true });
+    
   }
 
   create(): void {
     // create game objects
+    this.particles = this.add.particles('smoke');
     this.player = new Player({
       scene: this,
       x: this.sys.canvas.width / 2,
@@ -88,6 +91,21 @@ export class GameScene extends Phaser.Scene {
   }
 
   private bulletHitEnemy(bullet: Bullet, enemy: Enemy): void {
+    enemy.setDepth(-1);
+    this.emitter = this.particles.createEmitter({
+      x: enemy.x,
+      y: enemy.y,
+      speed: { min: -200, max: 200 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 0.2, end: 0.4 },
+      blendMode: 'SCREEN',
+      lifespan: 100,
+      maxParticles: 5
+    });
+    this.time.addEvent({
+      delay: 200,
+      callback: () => {this.emitter.stop()}
+    });
     bullet.destroy();
     enemy.gotHurt();
   }

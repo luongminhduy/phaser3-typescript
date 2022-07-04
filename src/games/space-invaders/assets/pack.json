@@ -19,6 +19,16 @@
       },
       {
         "type": "image",
+        "key": "smoke",
+        "url": "./assets/sprites/smoke.png"
+      },
+      {
+        "type": "image",
+        "key": "blue",
+        "url": "./assets/sprites/blue.png"
+      },
+      {
+        "type": "image",
         "key": "player",
         "url": "./assets/sprites/player.png"
       },

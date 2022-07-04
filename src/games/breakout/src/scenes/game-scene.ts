@@ -17,6 +17,7 @@ export class GameScene extends Phaser.Scene {
   private particlesSmoke: Phaser.GameObjects.Particles.ParticleEmitterManager;
   private emitterSmoke: Phaser.GameObjects.Particles.ParticleEmitter;
   private scoreTween: Phaser.Tweens.Tween;
+  private pathEmitter: Phaser.Curves.Path;
 
   constructor() {
     super({
@@ -172,18 +173,22 @@ export class GameScene extends Phaser.Scene {
   }
 
   private ballBrickCollision(ball: Ball, brick: Brick): void {
-    brick.destroy();
     if (this.emitter) this.emitter.stop();
+    this.pathEmitter = new Phaser.Curves.Path(brick.x, brick.y).circleTo(100);
+    brick.destroy();
     this.emitter = this.particles.createEmitter({
       x: brick.x + brick.width/2,
       y: brick.y + brick.height/2,
+      moveToX: this.scoreText.x + 50,
+      moveToY: this.scoreText.y,
       speed: { min: -200, max: 200 },
       angle: { min: 0, max: 360 },
-      scale: { start: 1, end: 0 },
+      scale: { start: 0.6, end: 1 },
       blendMode: 'SCREEN',
       //active: false,
-      lifespan: 300,
-      gravityY: 800
+      lifespan: 1000,
+      //gravityY: 800
+     // emitZone: { type: 'edge', source: this.pathEmitter, quantity: 48, yoyo: false }
     });
     this.time.addEvent({
       delay: 1000,

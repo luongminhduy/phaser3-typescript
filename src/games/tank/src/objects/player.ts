@@ -153,19 +153,13 @@ export class Player extends Phaser.GameObjects.Image {
       });
       this.shootingTween = this.scene.tweens.add({
         targets: this.barrel,
-        ease: 'Power3',
+        ease: 'Bounce.easeOut',
         scaleX: 1.5,
         scaleY: 1.5,
         yoyo: true,
         duration: 100,
         repeat: 0
       })
-      this.scene.time.addEvent({
-        delay: 100,
-        callback: () => {
-          this.shootingTween.stop();
-        }
-      });
       if (this.bullets.getLength() < 10) {
         this.bullets.add(
           new Bullet({

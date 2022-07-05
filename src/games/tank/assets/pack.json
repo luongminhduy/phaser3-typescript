@@ -15,7 +15,12 @@
       {
         "type": "image",
         "key": "red",
-        "url": "./assets/particles/red.png"
+        "url": "./assets/sprites/red.png"
+      },
+      {
+        "type": "image",
+        "key": "smoke",
+        "url": "./assets/sprites/smoke.png"
       },
       {
         "type": "image",

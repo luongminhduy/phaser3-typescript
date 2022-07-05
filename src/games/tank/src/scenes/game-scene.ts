@@ -11,7 +11,10 @@ export class GameScene extends Phaser.Scene {
   private player: Player;
   private enemies: Phaser.GameObjects.Group;
   private obstacles: Phaser.GameObjects.Group;
-
+  private shootingParticles: Phaser.GameObjects.Particles.ParticleEmitterManager;
+  private shootingEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
+  private hitParticles: Phaser.GameObjects.Particles.ParticleEmitterManager;
+  private hitEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
   private target: Phaser.Math.Vector2;
 
   constructor() {
@@ -90,6 +93,39 @@ export class GameScene extends Phaser.Scene {
       );
     }, this);
     this.cameras.main.startFollow(this.player);
+    //shooting effect
+    this.shootingParticles = this.add.particles('smoke');
+
+    this.shootingEmitter = this.shootingParticles.createEmitter({
+        alpha: { start: 1, end: 0 },
+        scale: { start: 0.5, end: 2.5 },
+        tint: { start: 0xff945e, end: 0xff945e },
+        speed: 20,
+        accelerationY: -300,
+        angle: { min: -85, max: -95 },
+        rotate: { min: -180, max: 180 },
+        lifespan: { min: 400, max: 500 },
+        blendMode: 'ADD',
+        frequency: 60,
+        //maxParticles: 10,
+        x: -100,
+        y: -100,
+        on: false
+    });
+    //destroying effect
+    this.hitParticles = this.add.particles('red');
+    this.hitEmitter = this.hitParticles.createEmitter({
+      x: 400,
+      y: 300,
+      speed: { min: -800, max: 800 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 0.5, end: 0 },
+      blendMode: 'SCREEN',
+      //active: false,
+      lifespan: 600,
+      gravityY: 800,
+      on: false
+    });
   }
 
   update(): void {
@@ -150,6 +186,16 @@ export class GameScene extends Phaser.Scene {
   }
 
   private bulletHitObstacles(bullet: Bullet, obstacle: Obstacle): void {
+    if (this.hitEmitter) {
+      this.hitEmitter.setPosition(bullet.x, bullet.y);
+      this.hitEmitter.start();
+      this.time.addEvent({
+        delay: 100,
+        callback: () => {
+          this.hitEmitter.stop();
+        }
+      }) 
+    }
     bullet.destroy();
   }
 
@@ -159,6 +205,16 @@ export class GameScene extends Phaser.Scene {
   }
 
   private playerBulletHitEnemy(bullet: Bullet, enemy: Enemy): void {
+    if (this.shootingEmitter) {
+      this.shootingEmitter.setPosition(enemy.x, enemy.y);
+      this.shootingEmitter.start();
+      this.time.addEvent({
+        delay: 100,
+        callback: () => {
+          this.shootingEmitter.stop();
+        }
+      })
+    }
     bullet.destroy();
     enemy.updateHealth();
   }

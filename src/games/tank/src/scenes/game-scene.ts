@@ -113,7 +113,7 @@ export class GameScene extends Phaser.Scene {
         on: false
     });
     //destroying effect
-    this.hitParticles = this.add.particles('red');
+    this.hitParticles = this.add.particles('blue');
     this.hitEmitter = this.hitParticles.createEmitter({
       x: 400,
       y: 300,
@@ -182,6 +182,16 @@ export class GameScene extends Phaser.Scene {
   }
 
   private bulletHitLayer(bullet: Bullet): void {
+    if (this.hitEmitter) {
+      this.hitEmitter.setPosition(bullet.x, bullet.y);
+      this.hitEmitter.start();
+      this.time.addEvent({
+        delay: 100,
+        callback: () => {
+          this.hitEmitter.stop();
+        }
+      }) 
+    }
     bullet.destroy();
   }
 

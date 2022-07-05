@@ -182,7 +182,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private bulletHitLayer(bullet: Bullet): void {
-    if (this.hitEmitter) {
+        if (this.hitEmitter) {
       this.hitEmitter.setPosition(bullet.x, bullet.y);
       this.hitEmitter.start();
       this.time.addEvent({

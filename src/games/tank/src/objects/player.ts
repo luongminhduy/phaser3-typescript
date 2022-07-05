@@ -21,6 +21,8 @@ export class Player extends Phaser.GameObjects.Image {
   private rotateKeyLeft: Phaser.Input.Keyboard.Key;
   private rotateKeyRight: Phaser.Input.Keyboard.Key;
   private shootingKey: Phaser.Input.Keyboard.Key;
+  //shooting tween
+  private shootingTween: Phaser.Tweens.Tween;
 
   public getBullets(): Phaser.GameObjects.Group {
     return this.bullets;
@@ -149,15 +151,21 @@ export class Player extends Phaser.GameObjects.Image {
         yoyo: true,
         paused: false
       });
-      // this.scene.tweens.add({
-      //   targets: this.barrel,
-      //   ease: 'Power3',
-      //   scaleX: 1.5,
-      //   scaleY: 1.5,
-      //   yoyo: true,
-      //   repeat: 0
-      // })
-
+      this.shootingTween = this.scene.tweens.add({
+        targets: this.barrel,
+        ease: 'Power3',
+        scaleX: 1.5,
+        scaleY: 1.5,
+        yoyo: true,
+        duration: 100,
+        repeat: 0
+      })
+      this.scene.time.addEvent({
+        delay: 100,
+        callback: () => {
+          this.shootingTween.stop();
+        }
+      });
       if (this.bullets.getLength() < 10) {
         this.bullets.add(
           new Bullet({

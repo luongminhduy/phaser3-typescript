@@ -151,6 +151,8 @@ export class Player extends Phaser.GameObjects.Image {
         yoyo: true,
         paused: false
       });
+      if (this.shootingTween) this.shootingTween.stop();
+      else 
       this.shootingTween = this.scene.tweens.add({
         targets: this.barrel,
         ease: 'Bounce.easeOut',
@@ -159,7 +161,7 @@ export class Player extends Phaser.GameObjects.Image {
         yoyo: true,
         duration: 100,
         repeat: 0
-      })
+      });
       if (this.bullets.getLength() < 10) {
         this.bullets.add(
           new Bullet({

@@ -126,6 +126,15 @@ export class GameScene extends Phaser.Scene {
       gravityY: 800,
       on: false
     });
+    var pause_label = this.add.image(0, 0, 'red');
+    var container = this.add.container(400, 300, [ pause_label ]).setScrollFactor(0);
+    container.setSize(pause_label.width, pause_label.height);
+    container.setInteractive();
+    
+    container.on('pointerdown', function () {
+      console.log('Pause');
+      //to do
+    });
   }
 
   update(): void {

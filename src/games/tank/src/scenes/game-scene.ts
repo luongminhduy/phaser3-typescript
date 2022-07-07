@@ -131,9 +131,14 @@ export class GameScene extends Phaser.Scene {
     container.setSize(pause_label.width, pause_label.height);
     container.setInteractive();
     
+    container.on('pointerover', function() {
+      console.log("over");
+      pause_label.setTint(0x44ff44);
+    });
+
     container.on('pointerdown', function () {
       console.log('Pause');
-      //to do
+      this.scene.game.scene.pause('GameScene');
     });
   }
 

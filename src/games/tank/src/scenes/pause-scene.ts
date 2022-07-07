@@ -21,7 +21,7 @@ export class PauseScene extends Phaser.Scene {
             )
         );
         //resume
-        var pause_label = this.add.image(0, 0, 'resume').setScale(0.2);
+        var pause_label = this.add.image(0, 0, 'return').setScale(0.2);
         this.containerButtonResume = this.add.container(this.sys.canvas.width / 2, 700, [ pause_label ]).setScrollFactor(0);
         this.containerButtonResume.setSize(pause_label.width * 0.2, pause_label.height*0.2);
         this.containerButtonResume.setInteractive();
@@ -44,9 +44,9 @@ export class PauseScene extends Phaser.Scene {
         });
 
 
-        var new_label = this.add.image(0, 0, 'red');
+        var new_label = this.add.image(0, 0, 'newGame').setScale(0.2);
         this.containerButtonNewGame = this.add.container(this.sys.canvas.width / 2 + 200, 700, [ new_label ]).setScrollFactor(0);
-        this.containerButtonNewGame.setSize(new_label.width, new_label.height);
+        this.containerButtonNewGame.setSize(new_label.width*0.2, new_label.height*0.2);
         this.containerButtonNewGame.setInteractive();
         
         this.containerButtonNewGame.on('pointerover', function() {

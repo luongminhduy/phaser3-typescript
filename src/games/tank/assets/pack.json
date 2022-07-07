@@ -103,6 +103,16 @@
         "url": "./assets/obstacles/tree-large.png"
       },
       {
+        "type": "image",
+        "key": "newGame",
+        "url": "./assets/sprites/newGame.png"
+      },
+      {
+        "type": "image",
+        "key": "return",
+        "url": "./assets/sprites/return.png"
+      },
+      {
         "type": "audio",
         "key": "shooting",
         "url": "./assets/sounds/shooting.mp3"

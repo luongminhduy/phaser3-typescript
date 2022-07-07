@@ -136,9 +136,10 @@ export class GameScene extends Phaser.Scene {
       pause_label.setTint(0x44ff44);
     });
 
-    container.on('pointerdown', function () {
+    container.on('pointerdown',  () => {
       console.log('Pause');
-      this.scene.game.scene.pause('GameScene');
+      this.scene.pause('GameScene');
+      this.scene.start('PauseScene');
     });
   }
 

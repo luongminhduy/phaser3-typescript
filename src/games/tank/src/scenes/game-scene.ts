@@ -16,6 +16,7 @@ export class GameScene extends Phaser.Scene {
   private hitParticles: Phaser.GameObjects.Particles.ParticleEmitterManager;
   private hitEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
   private target: Phaser.Math.Vector2;
+  private containerObjects: Phaser.GameObjects.Container;
 
   constructor() {
     super({
@@ -132,14 +133,13 @@ export class GameScene extends Phaser.Scene {
     container.setInteractive();
     
     container.on('pointerover', function() {
-      console.log("over");
       pause_label.setTint(0x44ff44);
     });
 
     container.on('pointerdown',  () => {
-      console.log('Pause');
       this.scene.pause('GameScene');
-      this.scene.start('PauseScene');
+      this.scene.setVisible(false);
+      this.scene.launch('PauseScene');
     });
   }
 
@@ -197,7 +197,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private bulletHitLayer(bullet: Bullet): void {
-        if (this.hitEmitter) {
+    if (this.hitEmitter) {
       this.hitEmitter.setPosition(bullet.x, bullet.y);
       this.hitEmitter.start();
       this.time.addEvent({

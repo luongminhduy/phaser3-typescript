@@ -24,6 +24,11 @@
       },
       {
         "type": "image",
+        "key": "resume",
+        "url": "./assets/sprites/resume.png"
+      },
+      {
+        "type": "image",
         "key": "smoke",
         "url": "./assets/sprites/smoke.png"
       },

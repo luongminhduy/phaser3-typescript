@@ -23,10 +23,13 @@ export class Player extends Phaser.GameObjects.Image {
   private shootingKey: Phaser.Input.Keyboard.Key;
   //shooting tween
   private shootingTween: Phaser.Tweens.Tween;
+  isShooting: boolean = false;
 
   public getBullets(): Phaser.GameObjects.Group {
     return this.bullets;
   }
+  //sound
+  //private shootingSound: 
 
   constructor(aParams: IImageConstructor) {
     super(aParams.scene, aParams.x, aParams.y, aParams.texture, aParams.frame);
@@ -138,6 +141,7 @@ export class Player extends Phaser.GameObjects.Image {
   private handleShooting(): void {
     if (this.shootingKey.isDown && this.scene.time.now > this.lastShoot) {
       this.scene.cameras.main.shake(20, 0.005);
+      this.isShooting = true;
       this.scene.tweens.add({
         targets: this,
         props: { alpha: 0.8 },
@@ -173,7 +177,7 @@ export class Player extends Phaser.GameObjects.Image {
           })
         );
 
-        this.lastShoot = this.scene.time.now + 100;
+        this.lastShoot = this.scene.time.now + 500;
       }
     }
   }

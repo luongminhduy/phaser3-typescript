@@ -20,8 +20,7 @@ export class PauseScene extends Phaser.Scene {
             )
         );
         var pause_label = this.add.image(0, 0, 'resume').setScale(0.2);
-        this.containerButton = this.add.container(this.sys.canvas.width / 2 - 120, 300, [ pause_label ]).setScrollFactor(0);
-        this.containerButton.setDepth(100);
+        this.containerButton = this.add.container(this.sys.canvas.width / 2, 700, [ pause_label ]).setScrollFactor(0);
         this.containerButton.setSize(pause_label.width * 0.2, pause_label.height*0.2);
         this.containerButton.setInteractive();
         

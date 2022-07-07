@@ -101,6 +101,16 @@
         "type": "image",
         "key": "treeLarge",
         "url": "./assets/obstacles/tree-large.png"
+      },
+      {
+        "type": "audio",
+        "key": "shooting",
+        "url": "./assets/sounds/shooting.mp3"
+      },
+      {
+        "type": "audio",
+        "key": "burning",
+        "url": "./assets/sounds/burning.wav"
       }
     ]
   }

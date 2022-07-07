@@ -157,7 +157,7 @@ export class Player extends Phaser.GameObjects.Image {
       });
       if (this.shootingTween) this.shootingTween.stop();
       else 
-      this.shootingTween = this.scene.tweens.add({
+      this.scene.tweens.add({
         targets: this.barrel,
         ease: 'Bounce.easeOut',
         scaleX: 1.5,

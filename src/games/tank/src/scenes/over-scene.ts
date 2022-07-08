@@ -32,9 +32,27 @@ export class OverScene extends Phaser.Scene {
             this.add.bitmapText(
               this.sys.canvas.width / 2 - 120,
               200,
+              'scoreFont',
+              `${this.registry.get('score')}`,
+              80
+            )
+        );
+        this.bitmapTexts.push(
+            this.add.bitmapText(
+              this.sys.canvas.width / 2 - 120,
+              400,
               'font',
               'Highest Score ',
               30
+            )
+        );
+        this.bitmapTexts.push(
+            this.add.bitmapText(
+              this.sys.canvas.width / 2 - 120,
+              500,
+              'scoreFont',
+              `${this.registry.get('highest')}`,
+              80
             )
         );
         var new_label = this.add.image(0, 0, 'newGame').setScale(0.2);

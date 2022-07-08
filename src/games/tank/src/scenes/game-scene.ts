@@ -169,6 +169,9 @@ export class GameScene extends Phaser.Scene {
 
   update(): void {
     this.player.update();
+    if (!this.player.active) {
+      this.sound.stopAll();
+    }
     if (this.player.isShooting && this.shootingSound) {
         this.shootingSound.play();
         this.player.isShooting = false;
@@ -278,5 +281,7 @@ export class GameScene extends Phaser.Scene {
     let getCurrentPoints = this.registry.get('score');
     this.registry.set('score', getCurrentPoints + 10);
     this.events.emit('scoreChanges');
+    let currentHighest = this.registry.get('highest');
+    if (getCurrentPoints + 10 > currentHighest) this.registry.set('highest', getCurrentPoints + 10);
   }
 }

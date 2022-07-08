@@ -94,6 +94,7 @@ export class Player extends Phaser.GameObjects.Image {
       this.barrel.destroy();
       this.lifeBar.destroy();
     }
+
   }
 
   private handleInput() {

@@ -1,6 +1,7 @@
 import { BootScene } from './scenes/boot-scene';
 import { GameScene } from './scenes/game-scene';
 import { MenuScene } from './scenes/menu-scene';
+import { OverScene } from './scenes/over-scene';
 import { PauseScene } from './scenes/pause-scene';
 
 export const GameConfig: Phaser.Types.Core.GameConfig = {
@@ -12,7 +13,7 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
   zoom: 0.6,
   type: Phaser.AUTO,
   parent: 'game',
-  scene: [BootScene, PauseScene, MenuScene, GameScene],
+  scene: [BootScene, PauseScene, MenuScene, GameScene, OverScene],
   input: {
     keyboard: true
   },

@@ -203,7 +203,8 @@ export class Player extends Phaser.GameObjects.Image {
     } else {
       this.health = 0;
       this.active = false;
-      this.scene.scene.start('MenuScene');
+      this.scene.scene.stop('GameScene');
+      this.scene.scene.start('OverScene');
     }
   }
 }

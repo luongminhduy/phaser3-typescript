@@ -13,6 +13,12 @@
         "fontDataURL": "./assets/font/font.fnt"
       },
       {
+        "type": "bitmapFont",
+        "key": "scoreFont",
+        "textureURL": "./assets/font/scoreFont.png",
+        "fontDataURL": "./assets/font/scoreFont.xml"
+      },
+      {
         "type": "image",
         "key": "red",
         "url": "./assets/sprites/red.png"
@@ -121,6 +127,11 @@
         "type": "audio",
         "key": "burning",
         "url": "./assets/sounds/burning.wav"
+      },
+      {
+        "type": "audio",
+        "key": "war",
+        "url": "./assets/sounds/war.mp3"
       }
     ]
   }

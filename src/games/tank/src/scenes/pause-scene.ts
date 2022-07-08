@@ -2,6 +2,7 @@ export class PauseScene extends Phaser.Scene {
     private bitmapTexts: Phaser.GameObjects.BitmapText[] = [];
     private containerButtonResume: Phaser.GameObjects.Container;
     private containerButtonNewGame:  Phaser.GameObjects.Container;
+    private muteButton: Phaser.GameObjects.Container;
     constructor() {
         super({
           key: 'PauseScene'
@@ -27,7 +28,6 @@ export class PauseScene extends Phaser.Scene {
         this.containerButtonResume.setInteractive();
         
         this.containerButtonResume.on('pointerover', function() {
-          console.log("over");
           pause_label.setTint(0x44ff44);
         });
         this.containerButtonResume.on('pointerout', function () {
@@ -43,7 +43,7 @@ export class PauseScene extends Phaser.Scene {
           sceneGamePlaying.scene.setVisible(true);
         });
 
-
+        //new game
         var new_label = this.add.image(0, 0, 'newGame').setScale(0.2);
         this.containerButtonNewGame = this.add.container(this.sys.canvas.width / 2 + 200, 700, [ new_label ]).setScrollFactor(0);
         this.containerButtonNewGame.setSize(new_label.width*0.2, new_label.height*0.2);
@@ -62,8 +62,25 @@ export class PauseScene extends Phaser.Scene {
           this.scene.stop('PauseScene');
           this.scene.start('GameScene');
         });
-        
-        
+        //mute
+        var muteLabel = this.add.image(0, 0, 'red');
+        this.muteButton = this.add.container(this.sys.canvas.width / 2 + 200, 400, [ muteLabel ]).setScrollFactor(0);
+        this.muteButton.setSize(muteLabel.width,  muteLabel.height);
+        this.muteButton.setInteractive();
+        this.muteButton.on('pointerover', function() {
+          muteLabel.setTint(0x44ff44);
+        });
+        this.muteButton.on('pointerout', function () {
+
+          muteLabel.clearTint();
+    
+        });
+    
+        this.muteButton.on('pointerdown',  () => {
+          this.game.sound.mute = !this.game.sound.mute;
+          // this.scene.stop('PauseScene');
+          // this.scene.start('GameScene');
+        });
 
     }
 }

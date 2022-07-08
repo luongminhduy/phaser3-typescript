@@ -19,6 +19,8 @@ export class GameScene extends Phaser.Scene {
   private containerObjects: Phaser.GameObjects.Container;
   private shootingSound: Phaser.Sound.BaseSound;
   private burningSound: Phaser.Sound.BaseSound;
+  private warSound: Phaser.Sound.BaseSound;
+  private score: number = 0;
 
   constructor() {
     super({
@@ -32,6 +34,9 @@ export class GameScene extends Phaser.Scene {
     // create tilemap from tiled JSON
     this.shootingSound = this.sound.add('shooting');
     this.burningSound = this.sound.add('burning');
+    this.warSound = this.sound.add('war');
+    this.warSound.play();
+
     this.map = this.make.tilemap({ key: 'levelMap' });
 
     this.tileset = this.map.addTilesetImage('tiles');
@@ -145,6 +150,13 @@ export class GameScene extends Phaser.Scene {
       this.scene.setVisible(false);
       this.scene.launch('PauseScene');
     });
+    this.add.bitmapText(
+      this.sys.canvas.width / 2 - 120,
+      200,
+      'scoreFont',
+      "Score " + this.score,
+      30
+    ).setScrollFactor(0);
   }
 
   update(): void {
@@ -252,5 +264,6 @@ export class GameScene extends Phaser.Scene {
       this.burningSound.play();
     bullet.destroy();
     enemy.updateHealth();
+    this.score += 10;
   }
 }

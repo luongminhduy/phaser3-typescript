@@ -21,6 +21,7 @@ export class GameScene extends Phaser.Scene {
   private burningSound: Phaser.Sound.BaseSound;
   private warSound: Phaser.Sound.BaseSound;
   private score: number = 0;
+  private textScore: Phaser.GameObjects.BitmapText;
 
   constructor() {
     super({
@@ -28,7 +29,9 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  init(): void {}
+  init(): void {
+    this.registry.set('score', 0);
+  }
   
   create(): void {
     // create tilemap from tiled JSON
@@ -150,13 +153,18 @@ export class GameScene extends Phaser.Scene {
       this.scene.setVisible(false);
       this.scene.launch('PauseScene');
     });
-    this.add.bitmapText(
+    this.textScore = this.add.bitmapText(
       this.sys.canvas.width / 2 - 120,
       200,
       'scoreFont',
-      "Score " + this.score,
-      30
+      `Score  ${this.registry.get('score')}`,
+      100
     ).setScrollFactor(0);
+    this.textScore.setDepth(200);
+    this.events.on('scoreChanges', this.updateScore, this);
+  }
+  updateScore() {
+    this.textScore.setText(`Score ${this.registry.get('score')}`);
   }
 
   update(): void {
@@ -264,6 +272,11 @@ export class GameScene extends Phaser.Scene {
       this.burningSound.play();
     bullet.destroy();
     enemy.updateHealth();
-    this.score += 10;
+    this.addScore();
+  }
+  private addScore() {
+    let getCurrentPoints = this.registry.get('score');
+    this.registry.set('score', getCurrentPoints + 10);
+    this.events.emit('scoreChanges');
   }
 }

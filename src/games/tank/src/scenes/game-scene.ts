@@ -61,6 +61,7 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.player, this.obstacles);
 
     // collider for bullets
+    
     this.physics.add.collider(
       this.player.getBullets(),
       this.layer,
@@ -105,6 +106,7 @@ export class GameScene extends Phaser.Scene {
         null
       );
     }, this);
+
     this.cameras.main.startFollow(this.player);
     //shooting effect
     this.shootingParticles = this.add.particles('smoke');
@@ -126,7 +128,7 @@ export class GameScene extends Phaser.Scene {
         on: false
     });
     //destroying effect
-    this.hitParticles = this.add.particles('blue');
+    this.hitParticles = this.add.particles('red');
     this.hitEmitter = this.hitParticles.createEmitter({
       x: 400,
       y: 300,

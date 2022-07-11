@@ -1,7 +1,7 @@
-import { Player } from '../objects/player';
-import { Enemy } from '../objects/enemy';
-import { Obstacle } from '../objects/obstacles/obstacle';
-import { Bullet } from '../objects/bullet';
+import { Player } from '../objects/Player';
+import { Enemy } from '../objects/Enemy';
+import { Obstacle } from '../objects/obstacles/Obstacles';
+import { Bullet } from '../objects/Bullet';
 
 export class GameScene extends Phaser.Scene {
   private map: Phaser.Tilemaps.Tilemap;
@@ -142,7 +142,7 @@ export class GameScene extends Phaser.Scene {
       gravityY: 800,
       on: false
     });
-    let pause_label = this.add.image(0, 0, 'buttonNew');
+    let pauseLabel = this.add.image(0, 0, 'buttonNew');
     let menuText = this.add.bitmapText(
       //this.sys.canvas.width / 2 - 120,
       //200,
@@ -152,16 +152,18 @@ export class GameScene extends Phaser.Scene {
       'Menu',
       50
     ).setOrigin(0.5, 0.5);
-    let container = this.add.container(0 + 200, 100, [ pause_label, menuText ]).setScrollFactor(0);
-    container.setSize(pause_label.width, pause_label.height);
+    let container = this.add.container(0 + 200, 100, [ pauseLabel, menuText ]).setScrollFactor(0);
+    container.setSize(pauseLabel.width, pauseLabel.height);
     container.setDepth(1000);
     container.setInteractive();
     
     container.on('pointerover', function() {
-      pause_label.setTint(0x44ff44);
+      pauseLabel
+.setTint(0x44ff44);
     });
     container.on('pointerout', function() {
-      pause_label.clearTint();
+      pauseLabel
+.clearTint();
     });
 
     container.on('pointerdown',  () => {

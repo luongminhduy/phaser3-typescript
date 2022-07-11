@@ -261,7 +261,6 @@ export class GameScene extends Phaser.Scene {
     //     }
     //   }) 
     // }
-    console.log('Hit!');
     if (bullet.scene) {
     let emi = bullet.scene.add.particles('blue').createEmitter({
       x: bullet.x,
@@ -278,7 +277,7 @@ export class GameScene extends Phaser.Scene {
     bullet.scene.time.addEvent({
       delay: 100,
       callback : () => {
-        emi.stop();
+        emi.remove();
         bullet.destroy();
       }
     })
@@ -314,7 +313,7 @@ export class GameScene extends Phaser.Scene {
       bullet.scene.time.addEvent({
         delay: 100,
         callback : () => {
-          emi.stop();
+          emi.remove();
           bullet.destroy();
         }
       })

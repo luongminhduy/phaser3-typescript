@@ -3,8 +3,6 @@ export class PauseScene extends Phaser.Scene {
     private containerButtonResume: Phaser.GameObjects.Container;
     private containerButtonNewGame:  Phaser.GameObjects.Container;
     private muteButton: Phaser.GameObjects.Container;
-    private muteText: Phaser.GameObjects.BitmapText;
-    private muteLabel: Phaser.GameObjects.Image;
     private containerScene: Phaser.GameObjects.Container;
     constructor() {
         super({

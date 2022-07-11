@@ -12,10 +12,10 @@ export class OverScene extends Phaser.Scene {
     create() {
         this.bitmapTexts.push(
             this.add.bitmapText(
-              this.sys.canvas.width / 2 - 120,
+              this.sys.canvas.width / 2 - 100,
               40,
               'font',
-              'Over Scene',
+              'Game Over',
               30
             )
         );
@@ -30,7 +30,7 @@ export class OverScene extends Phaser.Scene {
         );
         this.bitmapTexts.push(
             this.add.bitmapText(
-              this.sys.canvas.width / 2 - 120,
+              this.sys.canvas.width / 2 - 80,
               200,
               'scoreFont',
               `${this.registry.get('score')}`,
@@ -48,7 +48,7 @@ export class OverScene extends Phaser.Scene {
         );
         this.bitmapTexts.push(
             this.add.bitmapText(
-              this.sys.canvas.width / 2 - 120,
+              this.sys.canvas.width / 2 - 80,
               500,
               'scoreFont',
               `${this.registry.get('highest')}`,

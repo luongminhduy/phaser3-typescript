@@ -36,6 +36,11 @@
       },
       {
         "type": "image",
+        "key": "backGround",
+        "url": "./assets/sprites/backGround.png"
+      },
+      {
+        "type": "image",
         "key": "buttonNew",
         "url": "./assets/sprites/buttonNew.png"
       },            

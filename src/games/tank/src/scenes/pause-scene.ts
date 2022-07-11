@@ -5,6 +5,7 @@ export class PauseScene extends Phaser.Scene {
     private muteButton: Phaser.GameObjects.Container;
     private muteText: Phaser.GameObjects.BitmapText;
     private muteLabel: Phaser.GameObjects.Image;
+    private containerScene: Phaser.GameObjects.Container;
     constructor() {
         super({
           key: 'PauseScene'
@@ -14,6 +15,8 @@ export class PauseScene extends Phaser.Scene {
 
     }
     create() {
+      this.scene.bringToTop();
+
         this.bitmapTexts.push(
             this.add.bitmapText(
               this.sys.canvas.width / 2 - 120,
@@ -23,10 +26,11 @@ export class PauseScene extends Phaser.Scene {
               30
             )
         );
+        
         //resume
         var pause_label = this.add.image(0, 0, 'buttonNew').setOrigin(0.5, 0.5);
         let returnText = this.add.bitmapText(0, 0, 'mainFont', 'Resume', 40).setOrigin(0.5, 0.5);
-        this.containerButtonResume = this.add.container(this.sys.canvas.width / 2 - 200, 700, [ pause_label, returnText ]).setScrollFactor(0);
+        this.containerButtonResume = this.add.container(this.sys.canvas.width / 2 - 200, 800, [ pause_label, returnText ]).setScrollFactor(0);
         this.containerButtonResume.setSize(pause_label.width, pause_label.height);
         this.containerButtonResume.setInteractive();
         
@@ -49,7 +53,7 @@ export class PauseScene extends Phaser.Scene {
         //new game
         let new_label = this.add.image(0, 0, 'buttonNew').setOrigin(0.5, 0.5);
         let newText = this.add.bitmapText(0, 0, 'mainFont', 'New Game', 40).setOrigin(0.5, 0.5);
-        this.containerButtonNewGame = this.add.container(this.sys.canvas.width / 2 + 200, 700, [ new_label, newText ]).setScrollFactor(0);
+        this.containerButtonNewGame = this.add.container(this.sys.canvas.width / 2 + 200, 800, [ new_label, newText ]).setScrollFactor(0);
         this.containerButtonNewGame.setSize(new_label.width, new_label.height);
         this.containerButtonNewGame.setInteractive();
         
@@ -69,7 +73,7 @@ export class PauseScene extends Phaser.Scene {
         //mute
         let muteLabel = this.add.image(0, 0, 'buttonNew').setOrigin(0.5, 0.5);
         let muteText = this.add.bitmapText(0, 0, 'mainFont', 'Mute', 40).setOrigin(0.5, 0.5);
-        this.muteButton = this.add.container(this.sys.canvas.width / 2 + 200, 400, [ muteLabel, muteText ]).setScrollFactor(0);
+        this.muteButton = this.add.container(this.sys.canvas.width / 2, 600, [ muteLabel, muteText ]).setScrollFactor(0);
         this.muteButton.setSize(muteLabel.width, muteLabel.height);
         this.muteButton.setInteractive();
         this.muteButton.on('pointerover', function() {
@@ -92,6 +96,7 @@ export class PauseScene extends Phaser.Scene {
             muteText.setText('Mute');
           }
         });
-
+        let bg = this.add.image(800, 700, 'backGround').setScrollFactor(0).setOrigin(0.5, 0.5).setScale(1.5);
+        this.containerScene = this.add.container(0, 0, [ bg, this.muteButton, this.containerButtonResume, this.containerButtonNewGame ]).setScrollFactor(0);
     }
 }

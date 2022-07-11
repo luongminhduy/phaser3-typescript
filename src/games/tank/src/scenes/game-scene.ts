@@ -154,6 +154,7 @@ export class GameScene extends Phaser.Scene {
     ).setOrigin(0.5, 0.5);
     let container = this.add.container(0 + 200, 100, [ pause_label, menuText ]).setScrollFactor(0);
     container.setSize(pause_label.width, pause_label.height);
+    container.setDepth(1000);
     container.setInteractive();
     
     container.on('pointerover', function() {
@@ -164,9 +165,10 @@ export class GameScene extends Phaser.Scene {
     });
 
     container.on('pointerdown',  () => {
-      this.scene.pause('GameScene');
-      this.scene.setVisible(false);
-      this.scene.launch('PauseScene');
+      // this.scene.pause('GameScene');
+      // this.scene.setVisible(false);
+      // this.scene.launch('PauseScene');
+      this.scene.pause().launch('PauseScene');  
     });
     this.textScore = this.add.bitmapText(
       //this.sys.canvas.width / 2 - 120,
@@ -180,7 +182,7 @@ export class GameScene extends Phaser.Scene {
     this.textScore.setDepth(200);
     let button = this.add.image(0, 0, 'buttonNew');
     this.scoreContainer = this.add.container(this.sys.canvas.width - 200, 100, [button, this.textScore]).setScrollFactor(0);
-    //this.scoreContainer.setDepth(100);
+    this.scoreContainer.setDepth(1000);
     this.scoreContainer.setInteractive();
     this.events.on('scoreChanges', this.updateScore, this);
   }

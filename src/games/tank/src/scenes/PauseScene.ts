@@ -70,7 +70,10 @@ export class PauseScene extends Phaser.Scene {
         });
         //mute
         let muteLabel = this.add.image(0, 0, 'buttonNew').setOrigin(0.5, 0.5);
-        let muteText = this.add.bitmapText(0, 0, 'mainFont', 'Mute', 40).setOrigin(0.5, 0.5);
+        let textMute;
+        if (this.game.sound.mute == true) textMute = 'Unmute';
+        else textMute = 'Mute';
+        let muteText = this.add.bitmapText(0, 0, 'mainFont', textMute, 40).setOrigin(0.5, 0.5);
         this.muteButton = this.add.container(this.sys.canvas.width / 2, 600, [ muteLabel, muteText ]).setScrollFactor(0);
         this.muteButton.setSize(muteLabel.width, muteLabel.height);
         this.muteButton.setInteractive();

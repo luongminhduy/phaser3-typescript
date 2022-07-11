@@ -1,4 +1,4 @@
-import { IRectangleConstructor } from '../interfaces/interfaces';
+import { IRectangleConstructor } from '../interfaces/Interface';
 
 export class Ball extends Phaser.GameObjects.Rectangle {
   body: Phaser.Physics.Arcade.Body;

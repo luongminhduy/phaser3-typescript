@@ -66,6 +66,7 @@ export class PauseScene extends Phaser.Scene {
     
         this.containerButtonNewGame.on('pointerdown',  () => {
           this.scene.stop('PauseScene');
+          this.sound.removeAll();
           this.scene.start('GameScene');
         });
         //mute

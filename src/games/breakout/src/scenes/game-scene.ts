@@ -1,7 +1,7 @@
-import { Ball } from '../objects/ball';
-import { Brick } from '../objects/brick';
-import { Player } from '../objects/player';
-import { settings } from '../settings';
+import { Ball } from '../objects/Ball';
+import { Brick } from '../objects/Brick';
+import { Player } from '../objects/Player';
+import { settings } from '../Setting';
 
 const BRICK_COLORS: number[] = [0xf2e49b, 0xbed996, 0xf2937e, 0xffffff];
 

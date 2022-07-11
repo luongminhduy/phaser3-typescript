@@ -55,7 +55,7 @@ export class OverScene extends Phaser.Scene {
               80
             )
         );
-        var new_label = this.add.image(0, 0, 'newGame').setScale(0.2);
+        var new_label = this.add.image(0, 0, 'buttonNew');
         this.containerButtonNewGame = this.add.container(this.sys.canvas.width / 2 + 200, 700, [ new_label ]).setScrollFactor(0);
         this.containerButtonNewGame.setSize(new_label.width*0.2, new_label.height*0.2);
         this.containerButtonNewGame.setInteractive();

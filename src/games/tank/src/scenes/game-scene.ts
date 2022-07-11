@@ -129,7 +129,7 @@ export class GameScene extends Phaser.Scene {
         on: false
     });
     //destroying effect
-    this.hitParticles = this.add.particles('red');
+    this.hitParticles = this.add.particles('blue');
     this.hitEmitter = this.hitParticles.createEmitter({
       x: 400,
       y: 300,
@@ -152,7 +152,7 @@ export class GameScene extends Phaser.Scene {
       'Menu',
       50
     ).setOrigin(0.5, 0.5);
-    let container = this.add.container(400, 300, [ pause_label, menuText ]).setScrollFactor(0);
+    let container = this.add.container(0 + 200, 100, [ pause_label, menuText ]).setScrollFactor(0);
     container.setSize(pause_label.width, pause_label.height);
     container.setInteractive();
     
@@ -179,7 +179,7 @@ export class GameScene extends Phaser.Scene {
     ).setOrigin(0.5, 0.5);
     this.textScore.setDepth(200);
     let button = this.add.image(0, 0, 'buttonNew');
-    this.scoreContainer = this.add.container(500, 100, [button, this.textScore]).setScrollFactor(0);
+    this.scoreContainer = this.add.container(this.sys.canvas.width - 200, 100, [button, this.textScore]).setScrollFactor(0);
     //this.scoreContainer.setDepth(100);
     this.scoreContainer.setInteractive();
     this.events.on('scoreChanges', this.updateScore, this);

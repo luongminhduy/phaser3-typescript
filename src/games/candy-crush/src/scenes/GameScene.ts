@@ -1,5 +1,5 @@
 import { BlendModes } from 'phaser';
-import { CONST } from '../const/const';
+import { CONST } from '../const/Const';
 import { Tile } from '../objects/Tile';
 
 export class GameScene extends Phaser.Scene {

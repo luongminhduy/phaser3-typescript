@@ -251,35 +251,100 @@ export class GameScene extends Phaser.Scene {
   }
 
   private bulletHitLayer(bullet: Bullet): void {
-    if (this.hitEmitter) {
-      this.hitEmitter.setPosition(bullet.x, bullet.y);
-      this.hitEmitter.start();
-      this.time.addEvent({
-        delay: 100,
-        callback: () => {
-          this.hitEmitter.stop();
-        }
-      }) 
-    }
+    // if (this.hitEmitter) {
+    //   this.hitEmitter.setPosition(bullet.x, bullet.y);
+    //   this.hitEmitter.start();
+    //   this.time.addEvent({
+    //     delay: 100,
+    //     callback: () => {
+    //       this.hitEmitter.stop();
+    //     }
+    //   }) 
+    // }
+    console.log('Hit!');
+    if (bullet.scene) {
+    let emi = bullet.scene.add.particles('blue').createEmitter({
+      x: bullet.x,
+      y: bullet.y,
+      speed: { min: -800, max: 800 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 0.5, end: 0 },
+      blendMode: 'SCREEN',
+      //active: false,
+      lifespan: 600,
+      gravityY: 800
+    });
+  
+    bullet.scene.time.addEvent({
+      delay: 100,
+      callback : () => {
+        emi.stop();
+        bullet.destroy();
+      }
+    })
     bullet.destroy();
+  }
   }
 
   private bulletHitObstacles(bullet: Bullet, obstacle: Obstacle): void {
-    if (this.hitEmitter) {
-      this.hitEmitter.setPosition(bullet.x, bullet.y);
-      this.hitEmitter.start();
-      this.time.addEvent({
+    // if (this.hitEmitter) {
+    //   this.hitEmitter.setPosition(bullet.x, bullet.y);
+    //   this.hitEmitter.start();
+    //   this.time.addEvent({
+    //     delay: 100,
+    //     callback: () => {
+    //       this.hitEmitter.stop();
+    //     }
+    //   }) 
+    // }
+    // bullet.destroy();
+    if (bullet.scene) {
+      let emi = bullet.scene.add.particles('blue').createEmitter({
+        x: bullet.x,
+        y: bullet.y,
+        speed: { min: -800, max: 800 },
+        angle: { min: 0, max: 360 },
+        scale: { start: 0.5, end: 0 },
+        blendMode: 'SCREEN',
+        //active: false,
+        lifespan: 600,
+        gravityY: 800
+      });
+    
+      bullet.scene.time.addEvent({
         delay: 100,
-        callback: () => {
-          this.hitEmitter.stop();
+        callback : () => {
+          emi.stop();
+          bullet.destroy();
         }
-      }) 
+      })
+      bullet.destroy();
     }
-    bullet.destroy();
   }
 
   private enemyBulletHitPlayer(bullet: Bullet, player: Player): void {
-    bullet.destroy();
+    if (bullet.scene) {
+      let emi = bullet.scene.add.particles('smoke').createEmitter({
+        x: player.x,
+        y: player.y,
+        speed: { min: -800, max: 800 },
+        angle: { min: 0, max: 360 },
+        scale: { start: 0.5, end: 0 },
+        blendMode: 'SCREEN',
+        //active: false,
+        lifespan: 600,
+        gravityY: 800
+      });
+    
+      bullet.scene.time.addEvent({
+        delay: 100,
+        callback : () => {
+          emi.stop();
+          bullet.destroy();
+        }
+      })
+      bullet.destroy();
+    }
     player.updateHealth();
   }
 

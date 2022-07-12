@@ -13,7 +13,6 @@ export class GameScene extends Phaser.Scene {
   private firstSelectedTile: Tile;
   private secondSelectedTile: Tile;
   private tween: Phaser.Tweens.Tween;
-  private isRotate: boolean = false;
   private particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
   private emitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
@@ -52,9 +51,7 @@ export class GameScene extends Phaser.Scene {
     // Check if matches on the start
     this.checkMatches();
   }
-  update(time: number, delta: number): void {
-    
-  }
+
   create() {
     this.particles = this.add.particles('red');
     this.emitter = this.particles.createEmitter({
@@ -106,11 +103,8 @@ export class GameScene extends Phaser.Scene {
           targets: this.firstSelectedTile,
           angle: 360,
           ease: 'Power0',
-          //duration: 2000,
           repeat: -1
       });
-        //this.emitter.startFollow(this.firstSelectedTile);
-        //this.firstSelectedTile.angle += 20;
       } else {
         // So if we are here, we must have selected a second tile
         this.secondSelectedTile = gameobject;
@@ -231,11 +225,6 @@ export class GameScene extends Phaser.Scene {
     if (matches.length > 0) {
       //Remove the tiles
       this.removeTileGroup(matches);
-      //start emitter
-
-      // if (this.firstSelectedTile)
-      //   this.emitter.setPosition(this.secondSelectedTile.x, this.secondSelectedTile.y);
-      // if (this.emitter) this.emitter.start();
       // Move the tiles currently on the board into their new positions
       this.time.addEvent({
         delay: 300,
@@ -248,11 +237,6 @@ export class GameScene extends Phaser.Scene {
         },
         loop: false
       })
-      //this.resetTile();
-      //Fill the board with new tiles wherever there is an empty spot
-      // this.fillTile();
-      // this.tileUp();
-      // this.checkMatches();
     } else {
       // No match so just swap the tiles back to their original position and reset
       this.swapTiles();

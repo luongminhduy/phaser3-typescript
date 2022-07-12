@@ -17,7 +17,7 @@ export class GameScene extends Phaser.Scene {
   private particlesSmoke: Phaser.GameObjects.Particles.ParticleEmitterManager;
   private emitterSmoke: Phaser.GameObjects.Particles.ParticleEmitter;
   private scoreTween: Phaser.Tweens.Tween;
-  private pathEmitter: Phaser.Curves.Path;
+  
 
   constructor() {
     super({
@@ -29,6 +29,26 @@ export class GameScene extends Phaser.Scene {
     settings.highScore = settings.score;
     settings.score = 0;
     settings.lives = 1;
+  }
+
+  smokeOfBall() {
+    this.particlesSmoke = this.add.particles('smoke');
+
+    this.emitterSmoke = this.particlesSmoke.createEmitter({
+        alpha: { start: 1, end: 0 },
+        scale: { start: 0.5, end: 2.5 },
+        //tint: { start: 0xff945e, end: 0xff945e },
+        speed: 20,
+        accelerationY: -300,
+        angle: { min: -85, max: -95 },
+        rotate: { min: -180, max: 180 },
+        lifespan: { min: 400, max: 500 },
+        blendMode: 'ADD',
+        frequency: 60,
+        //maxParticles: 10,
+        x: -100,
+        y: -100
+    });
   }
 
   create(): void {
@@ -70,24 +90,7 @@ export class GameScene extends Phaser.Scene {
     // ball
     this.ball = new Ball({ scene: this, x: 0, y: 0 }).setVisible(false);
     //smoke of ball
-    this.particlesSmoke = this.add.particles('smoke');
-
-    this.emitterSmoke = this.particlesSmoke.createEmitter({
-        alpha: { start: 1, end: 0 },
-        scale: { start: 0.5, end: 2.5 },
-        //tint: { start: 0xff945e, end: 0xff945e },
-        speed: 20,
-        accelerationY: -300,
-        angle: { min: -85, max: -95 },
-        rotate: { min: -180, max: 180 },
-        lifespan: { min: 400, max: 500 },
-        blendMode: 'ADD',
-        frequency: 60,
-        //maxParticles: 10,
-        x: -100,
-        y: -100
-    });
-    //this.emitter.follow(this.ball);
+    this.smokeOfBall();
     // score
     this.scoreText = this.add.bitmapText(
       10,
@@ -96,7 +99,7 @@ export class GameScene extends Phaser.Scene {
       `Score: ${settings.score}`,
       8
     );
-    //this.scoreText.setFontSize(1);
+    
     this.scoreTween = this.tweens.add({
       targets: this.scoreText,
       scaleX: 1.5,
@@ -120,8 +123,6 @@ export class GameScene extends Phaser.Scene {
       `Lives: ${settings.lives}`,
       8
     );
-    
-
     // collisions
     // ----------
     this.physics.add.collider(this.player, this.ball);
@@ -171,7 +172,6 @@ export class GameScene extends Phaser.Scene {
 
   private ballBrickCollision(ball: Ball, brick: Brick): void {
     if (this.emitter) this.emitter.stop();
-    this.pathEmitter = new Phaser.Curves.Path(brick.x, brick.y).circleTo(100);
     brick.destroy();
     this.emitter = this.particles.createEmitter({
       x: brick.x + brick.width/2,
@@ -182,10 +182,7 @@ export class GameScene extends Phaser.Scene {
       angle: { min: 0, max: 360 },
       scale: { start: 0.6, end: 1 },
       blendMode: 'SCREEN',
-      //active: false,
       lifespan: 1000,
-      //gravityY: 800
-     // emitZone: { type: 'edge', source: this.pathEmitter, quantity: 48, yoyo: false }
     });
     this.time.addEvent({
       delay: 1000,

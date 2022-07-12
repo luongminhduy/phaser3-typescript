@@ -15,12 +15,9 @@ export class GameScene extends Phaser.Scene {
   private shootingEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
   private hitParticles: Phaser.GameObjects.Particles.ParticleEmitterManager;
   private hitEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
-  private target: Phaser.Math.Vector2;
-  private containerObjects: Phaser.GameObjects.Container;
   private shootingSound: Phaser.Sound.BaseSound;
   private burningSound: Phaser.Sound.BaseSound;
   private warSound: Phaser.Sound.BaseSound;
-  private score: number = 0;
   private textScore: Phaser.GameObjects.BitmapText;
   private scoreContainer: Phaser.GameObjects.Container;
   screenRec: Phaser.GameObjects.Rectangle;
@@ -35,13 +32,69 @@ export class GameScene extends Phaser.Scene {
     this.registry.set('score', 0);
   }
   
-  create(): void {
-    // create tilemap from tiled JSON
+  addSound() {
     this.shootingSound = this.sound.add('shooting');
     this.burningSound = this.sound.add('burning');
     this.warSound = this.sound.add('war');
     this.warSound.play();
+  }
 
+  addButtonMenu() {
+    let pauseLabel = this.add.image(0, 0, 'buttonNew');
+    let menuText = this.add.bitmapText(
+      //this.sys.canvas.width / 2 - 120,
+      //200,
+      0,
+      0,
+      'mainFont',
+      'Menu',
+      50
+    ).setOrigin(0.5, 0.5);
+    this.screenRec = this.add.rectangle(0, 0, this.sys.canvas.width*2, this.sys.canvas.height*2, 0x000000).setAlpha(0).setDepth(5000).setOrigin(0.5, 0.5).setScrollFactor(0);
+    let container = this.add.container(0 + 200, 100, [ pauseLabel, menuText ]).setScrollFactor(0);
+    container.setSize(pauseLabel.width, pauseLabel.height);
+    container.setDepth(1000);
+    container.setInteractive();
+    
+    container.on('pointerover', function() {
+      pauseLabel.setTint(0x44ff44);
+    });
+    container.on('pointerout', function() {
+      pauseLabel.clearTint();
+    });
+
+    container.on('pointerdown',  () => {
+      // this.scene.pause('GameScene');
+      // this.scene.setVisible(false);
+      // this.scene.launch('PauseScene');
+      //this.screenRec.setAlpha(0.5);
+      this.screenRec.setAlpha(0.4);
+      this.scene.pause().launch('PauseScene');
+        
+    });
+  }
+
+  addButtonScore() {
+    this.textScore = this.add.bitmapText(
+      //this.sys.canvas.width / 2 - 120,
+      //200,
+      0,
+      0,
+      'mainFont',
+      `Score  ${this.registry.get('score')}`,
+      50
+    ).setOrigin(0.5, 0.5);
+    this.textScore.setDepth(200);
+    let button = this.add.image(0, 0, 'buttonNew');
+    this.scoreContainer = this.add.container(this.sys.canvas.width - 200, 100, [button, this.textScore]).setScrollFactor(0);
+    this.scoreContainer.setDepth(1000);
+    this.scoreContainer.setInteractive();
+    this.events.on('scoreChanges', this.updateScore, this);
+  }
+
+  create(): void {
+    this.addSound();
+    // create tilemap from tiled JSON
     this.map = this.make.tilemap({ key: 'levelMap' });
 
     this.tileset = this.map.addTilesetImage('tiles');
@@ -143,53 +196,8 @@ export class GameScene extends Phaser.Scene {
       gravityY: 800,
       on: false
     });
-    let pauseLabel = this.add.image(0, 0, 'buttonNew');
-    let menuText = this.add.bitmapText(
-      //this.sys.canvas.width / 2 - 120,
-      //200,
-      0,
-      0,
-      'mainFont',
-      'Menu',
-      50
-    ).setOrigin(0.5, 0.5);
-    this.screenRec = this.add.rectangle(0, 0, this.sys.canvas.width*2, this.sys.canvas.height*2, 0x000000).setAlpha(0).setDepth(5000).setOrigin(0.5, 0.5).setScrollFactor(0);
-    let container = this.add.container(0 + 200, 100, [ pauseLabel, menuText ]).setScrollFactor(0);
-    container.setSize(pauseLabel.width, pauseLabel.height);
-    container.setDepth(1000);
-    container.setInteractive();
-    
-    container.on('pointerover', function() {
-      pauseLabel.setTint(0x44ff44);
-    });
-    container.on('pointerout', function() {
-      pauseLabel.clearTint();
-    });
-
-    container.on('pointerdown',  () => {
-      // this.scene.pause('GameScene');
-      // this.scene.setVisible(false);
-      // this.scene.launch('PauseScene');
-      //this.screenRec.setAlpha(0.5);
-      this.screenRec.setAlpha(0.4);
-      this.scene.pause().launch('PauseScene');
-        
-    });
-    this.textScore = this.add.bitmapText(
-      //this.sys.canvas.width / 2 - 120,
-      //200,
-      0,
-      0,
-      'mainFont',
-      `Score  ${this.registry.get('score')}`,
-      50
-    ).setOrigin(0.5, 0.5);
-    this.textScore.setDepth(200);
-    let button = this.add.image(0, 0, 'buttonNew');
-    this.scoreContainer = this.add.container(this.sys.canvas.width - 200, 100, [button, this.textScore]).setScrollFactor(0);
-    this.scoreContainer.setDepth(1000);
-    this.scoreContainer.setInteractive();
-    this.events.on('scoreChanges', this.updateScore, this);
+    this.addButtonMenu();
+    this.addButtonScore();
   }
   updateScore() {
     this.textScore.setText(`Score ${this.registry.get('score')}`);
@@ -197,7 +205,6 @@ export class GameScene extends Phaser.Scene {
 
   update(): void {
     this.player.update();
-    console.log(this.scene.isPaused('GameScene'));
     if (this.screenRec && !this.scene.isPaused('GameScene')) this.screenRec.setAlpha(0);
     if (!this.player.active) {
       this.sound.stopAll();
@@ -258,16 +265,6 @@ export class GameScene extends Phaser.Scene {
   }
 
   private bulletHitLayer(bullet: Bullet): void {
-    // if (this.hitEmitter) {
-    //   this.hitEmitter.setPosition(bullet.x, bullet.y);
-    //   this.hitEmitter.start();
-    //   this.time.addEvent({
-    //     delay: 100,
-    //     callback: () => {
-    //       this.hitEmitter.stop();
-    //     }
-    //   }) 
-    // }
     if (bullet.scene) {
     let emi = bullet.scene.add.particles('blue').createEmitter({
       x: bullet.x,
@@ -293,17 +290,6 @@ export class GameScene extends Phaser.Scene {
   }
 
   private bulletHitObstacles(bullet: Bullet, obstacle: Obstacle): void {
-    // if (this.hitEmitter) {
-    //   this.hitEmitter.setPosition(bullet.x, bullet.y);
-    //   this.hitEmitter.start();
-    //   this.time.addEvent({
-    //     delay: 100,
-    //     callback: () => {
-    //       this.hitEmitter.stop();
-    //     }
-    //   }) 
-    // }
-    // bullet.destroy();
     if (bullet.scene) {
       let emi = bullet.scene.add.particles('blue').createEmitter({
         x: bullet.x,
@@ -372,6 +358,7 @@ export class GameScene extends Phaser.Scene {
     enemy.updateHealth();
     this.addScore();
   }
+  
   private addScore() {
     let getCurrentPoints = this.registry.get('score');
     this.registry.set('score', getCurrentPoints + 10);
@@ -379,5 +366,4 @@ export class GameScene extends Phaser.Scene {
     let currentHighest = this.registry.get('highest');
     if (getCurrentPoints + 10 > currentHighest) this.registry.set('highest', getCurrentPoints + 10);
   }
-
 }

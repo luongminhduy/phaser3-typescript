@@ -44,7 +44,7 @@ export class PauseScene extends Phaser.Scene {
         this.containerButtonResume.on('pointerdown',  () => {
           this.scene.stop('PauseScene');
           this.scene.resume('GameScene');
-          var sceneGamePlaying = this.scene.get('GameScene');
+          let sceneGamePlaying = this.scene.get('GameScene');
           sceneGamePlaying.scene.setVisible(true);
         });
 
@@ -99,6 +99,13 @@ export class PauseScene extends Phaser.Scene {
           }
         });
         let bg = this.add.image(800, 700, 'backGround').setScrollFactor(0).setOrigin(0.5, 0.5).setScale(1.5);
-        this.containerScene = this.add.container(0, 0, [ bg, this.muteButton, this.containerButtonResume, this.containerButtonNewGame ]).setScrollFactor(0);
+        this.containerScene = this.add.container(-500, 0, [ bg, this.muteButton, this.containerButtonResume, this.containerButtonNewGame ]).setScrollFactor(0);
+        this.tweens.add({
+          targets: this.containerScene,
+          //to do
+          x: 0,
+          duration: 100,
+          ease: 'Sine.easeOut'
+        })
     }
 }

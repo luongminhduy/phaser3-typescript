@@ -23,6 +23,7 @@ export class GameScene extends Phaser.Scene {
   private score: number = 0;
   private textScore: Phaser.GameObjects.BitmapText;
   private scoreContainer: Phaser.GameObjects.Container;
+  screenRec: Phaser.GameObjects.Rectangle;
 
   constructor() {
     super({
@@ -152,6 +153,7 @@ export class GameScene extends Phaser.Scene {
       'Menu',
       50
     ).setOrigin(0.5, 0.5);
+    this.screenRec = this.add.rectangle(0, 0, this.sys.canvas.width*2, this.sys.canvas.height*2, 0x000000).setAlpha(0).setDepth(5000).setOrigin(0.5, 0.5).setScrollFactor(0);
     let container = this.add.container(0 + 200, 100, [ pauseLabel, menuText ]).setScrollFactor(0);
     container.setSize(pauseLabel.width, pauseLabel.height);
     container.setDepth(1000);
@@ -168,7 +170,10 @@ export class GameScene extends Phaser.Scene {
       // this.scene.pause('GameScene');
       // this.scene.setVisible(false);
       // this.scene.launch('PauseScene');
-      this.scene.pause().launch('PauseScene');  
+      //this.screenRec.setAlpha(0.5);
+      this.screenRec.setAlpha(0.4);
+      this.scene.pause().launch('PauseScene');
+        
     });
     this.textScore = this.add.bitmapText(
       //this.sys.canvas.width / 2 - 120,
@@ -192,6 +197,8 @@ export class GameScene extends Phaser.Scene {
 
   update(): void {
     this.player.update();
+    console.log(this.scene.isPaused('GameScene'));
+    if (this.screenRec && !this.scene.isPaused('GameScene')) this.screenRec.setAlpha(0);
     if (!this.player.active) {
       this.sound.stopAll();
     }
@@ -372,4 +379,5 @@ export class GameScene extends Phaser.Scene {
     let currentHighest = this.registry.get('highest');
     if (getCurrentPoints + 10 > currentHighest) this.registry.set('highest', getCurrentPoints + 10);
   }
+
 }

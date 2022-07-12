@@ -15,7 +15,7 @@ export class Enemy extends Phaser.GameObjects.Image {
 
   // game objects
   private bullets: Phaser.GameObjects.Group;
-
+  
   public getBarrel(): Phaser.GameObjects.Image {
     return this.barrel;
   }

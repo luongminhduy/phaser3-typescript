@@ -205,6 +205,27 @@ export class GameScene extends Phaser.Scene {
     //Call the getMatches function to check for spots where there is
     //a run of three or more tiles in a row
     let matches = this.getMatches(this.tileGrid);
+    for(let i = 0; i < matches.length; i++) {
+      for (let j = 0; j < matches[i].length; j++) {
+        let emi = this.add.particles('red').createEmitter({
+          x: matches[i][j].x,
+          y: matches[i][j].y,
+          speed: { min: -200, max: 200 },
+          angle: { min: 0, max: 360 },
+          scale: { start: 1, end: 0 },
+          blendMode: 'SCREEN',
+          //active: false,
+          lifespan: 300,
+          gravityY: 800
+        })
+        this.time.addEvent({
+          delay: 300,
+          callback: () => {
+            emi.stop();
+          }
+        })
+      }
+    }
 
     //If there are matches, remove them
     if (matches.length > 0) {
@@ -212,14 +233,14 @@ export class GameScene extends Phaser.Scene {
       this.removeTileGroup(matches);
       //start emitter
 
-      if (this.firstSelectedTile)
-        this.emitter.setPosition(this.secondSelectedTile.x, this.secondSelectedTile.y);
-      if (this.emitter) this.emitter.start();
+      // if (this.firstSelectedTile)
+      //   this.emitter.setPosition(this.secondSelectedTile.x, this.secondSelectedTile.y);
+      // if (this.emitter) this.emitter.start();
       // Move the tiles currently on the board into their new positions
       this.time.addEvent({
         delay: 300,
         callback: () => {
-          this.emitter.stop();
+          //this.emitter.stop();
           this.resetTile();
           this.fillTile();
           this.tileUp();

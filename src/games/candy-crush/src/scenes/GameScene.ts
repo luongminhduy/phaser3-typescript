@@ -221,7 +221,7 @@ export class GameScene extends Phaser.Scene {
         this.time.addEvent({
           delay: 300,
           callback: () => {
-            emi.stop();
+            emi.remove();
           }
         })
       }

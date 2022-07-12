@@ -166,10 +166,7 @@ export class GameScene extends Phaser.Scene {
         this.ball.setVisible(false);
       }
     }
-    if (this.ball && this.ball.x != 0 && this.ball.y != 0) {
-      if (this.emitter)
         this.emitterSmoke.setPosition(this.ball.x, this.ball.y);
-    }
   }
 
   private ballBrickCollision(ball: Ball, brick: Brick): void {

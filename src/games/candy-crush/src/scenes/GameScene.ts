@@ -14,8 +14,8 @@ export class GameScene extends Phaser.Scene {
   private secondSelectedTile: Tile;
   private tween: Phaser.Tweens.Tween;
   private isRotate: boolean = false;
-  private particles: any;
-  private emitter: any;
+  private particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
+  private emitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
   constructor() {
     super({

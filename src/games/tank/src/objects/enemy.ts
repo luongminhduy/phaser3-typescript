@@ -16,6 +16,7 @@ export class Enemy extends Phaser.GameObjects.Image {
   // game objects
   private bullets: Phaser.GameObjects.Group;
   
+  damage: number = 0.05;
   public getBarrel(): Phaser.GameObjects.Image {
     return this.barrel;
   }
@@ -30,7 +31,7 @@ export class Enemy extends Phaser.GameObjects.Image {
     this.initContainer();
     this.scene.add.existing(this);
   }
-
+  
   private initContainer() {
     // variables
     this.health = 1;

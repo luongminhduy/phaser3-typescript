@@ -1,12 +1,13 @@
 import { Bullet } from './Bullet';
 import { IImageConstructor } from '../interfaces/IImageConstructor';
+import { Enemy } from './Enemy';
 
 export class Player extends Phaser.GameObjects.Image {
   body: Phaser.Physics.Arcade.Body;
 
   // variables
   private health: number;
-  private lastShoot: number;
+  private nextShoot: number;
   private speed: number;
 
   // children
@@ -28,20 +29,19 @@ export class Player extends Phaser.GameObjects.Image {
   public getBullets(): Phaser.GameObjects.Group {
     return this.bullets;
   }
-  //sound
-  //private shootingSound: 
 
   constructor(aParams: IImageConstructor) {
     super(aParams.scene, aParams.x, aParams.y, aParams.texture, aParams.frame);
 
     this.initImage();
     this.scene.add.existing(this);
+    
   }
 
   private initImage() {
     // variables
     this.health = 1;
-    this.lastShoot = 0;
+    this.nextShoot = 0;
     this.speed = 100;
 
     // image
@@ -115,7 +115,7 @@ export class Player extends Phaser.GameObjects.Image {
       // );
       this.body.setVelocityY(200);
     }
-    else if (this.cursors.right.isDown) {
+     else if (this.cursors.right.isDown) {
       this.body.setVelocityX(200);
     }
     else if (this.cursors.left.isDown) {
@@ -140,7 +140,7 @@ export class Player extends Phaser.GameObjects.Image {
   }
 
   private handleShooting(): void {
-    if (this.shootingKey.isDown && this.scene.time.now > this.lastShoot) {
+    if (this.shootingKey.isDown && this.scene.time.now > this.nextShoot) {
       this.scene.cameras.main.shake(20, 0.005);
       this.isShooting = true;
       this.scene.tweens.add({
@@ -177,8 +177,7 @@ export class Player extends Phaser.GameObjects.Image {
             texture: 'bulletBlue'
           })
         );
-
-        this.lastShoot = this.scene.time.now + 500;
+        this.nextShoot = this.scene.time.now + 500;
       }
     }
   }

@@ -2,6 +2,7 @@ import { Player } from '../objects/Player';
 import { Enemy } from '../objects/Enemy';
 import { Obstacle } from '../objects/obstacles/Obstacles';
 import { Bullet } from '../objects/Bullet';
+import { Button } from '../objects/Button';
 
 export class GameScene extends Phaser.Scene {
   private map: Phaser.Tilemaps.Tilemap;
@@ -37,49 +38,27 @@ export class GameScene extends Phaser.Scene {
     this.warSound = this.sound.add('war');
     this.warSound.play();
   }
-
-  addButtonMenu() {
-    let pauseLabel = this.add.image(0, 0, 'buttonNew');
-    let menuText = this.add.bitmapText(
-      //this.sys.canvas.width / 2 - 120,
-      //200,
-      0,
-      0,
-      'mainFont',
-      'Menu',
-      50
-    ).setOrigin(0.5, 0.5);
+  addRectangle() {
     const width = this.sys.canvas.width*2;
-    this.screenRec = this.add.rectangle(0, 0, width, this.sys.canvas.height*2, 0x000000)
+    const height = this.sys.canvas.height*2;
+    this.screenRec = this.add.rectangle(0, 0, width, height, 0x000000)
       .setAlpha(0)
       .setDepth(5000)
       .setOrigin(0.5, 0.5)
       .setScrollFactor(0);
-  
-    let container = this.add.container(0 + 200, 100, [ pauseLabel, menuText ]).setScrollFactor(0);
-    container.setSize(pauseLabel.width, pauseLabel.height);
-    container.setDepth(1000);
-    container.setInteractive();
-    
-    container.on('pointerover', function() {
-      pauseLabel.setTint(0x44ff44);
-    });
-    container.on('pointerout', function() {
-      pauseLabel.clearTint();
-    });
-
-    container.on('pointerdown',  () => {
-      // this.scene.pause('GameScene');
-      // this.scene.setVisible(false);
-      // this.scene.launch('PauseScene');
-      //this.screenRec.setAlpha(0.5);
-      this.screenRec.setAlpha(0.4);
-      this.scene.pause().launch('PauseScene');
-        
-    });
   }
 
-  addButtonScore() {
+  addMenuButton() {
+    let button = new Button(200, 100, this, 'Menu');
+    let menuButton = button.create(this);
+    button.setInteract();
+    button.container.on('pointerdown', () => {
+      this.screenRec.setAlpha(0.4);
+      this.scene.pause().launch('PauseScene');
+    })
+  }
+
+  addScoreButton() {
     this.textScore = this.add.bitmapText(
       //this.sys.canvas.width / 2 - 120,
       //200,
@@ -99,6 +78,7 @@ export class GameScene extends Phaser.Scene {
 
   create(): void {
     this.addSound();
+    this.addRectangle();
     // create tilemap from tiled JSON
     this.map = this.make.tilemap({ key: 'levelMap' });
 
@@ -201,8 +181,8 @@ export class GameScene extends Phaser.Scene {
       gravityY: 800,
       on: false
     });
-    this.addButtonMenu();
-    this.addButtonScore();
+    this.addMenuButton();
+    this.addScoreButton();
   }
 
   updateScore() {
@@ -272,7 +252,7 @@ export class GameScene extends Phaser.Scene {
 
   private bulletHitLayer(bullet: Bullet): void {
     if (bullet.scene) {
-      let emi = bullet.scene.add.particles('blue').createEmitter({
+      let emitterBlue = bullet.scene.add.particles('blue').createEmitter({
         x: bullet.x,
         y: bullet.y,
         speed: { min: -800, max: 800 },
@@ -287,7 +267,7 @@ export class GameScene extends Phaser.Scene {
       bullet.scene.time.addEvent({
         delay: 100,
         callback : () => {
-          emi.remove();
+          emitterBlue.remove();
           bullet.destroy();
         }
       })
@@ -298,7 +278,7 @@ export class GameScene extends Phaser.Scene {
 
   private bulletHitObstacles(bullet: Bullet, obstacle: Obstacle): void {
     if (bullet.scene) {
-      let emi = bullet.scene.add.particles('blue').createEmitter({
+      let emitterBlue = bullet.scene.add.particles('blue').createEmitter({
         x: bullet.x,
         y: bullet.y,
         speed: { min: -800, max: 800 },
@@ -313,7 +293,7 @@ export class GameScene extends Phaser.Scene {
       bullet.scene.time.addEvent({
         delay: 100,
         callback : () => {
-          emi.remove();
+          emitterBlue.remove();
           bullet.destroy();
         }
       })

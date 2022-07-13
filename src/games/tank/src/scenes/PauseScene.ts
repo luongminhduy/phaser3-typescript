@@ -1,123 +1,113 @@
+import { Button } from "../objects/Button";
 export class PauseScene extends Phaser.Scene {
     private bitmapTexts: Phaser.GameObjects.BitmapText[] = [];
     private containerButtonResume: Phaser.GameObjects.Container;
     private containerButtonNewGame:  Phaser.GameObjects.Container;
     private muteButton: Phaser.GameObjects.Container;
     private containerScene: Phaser.GameObjects.Container;
+    private backGround: Phaser.GameObjects.Image;
     constructor() {
         super({
           key: 'PauseScene'
         });
     }
-    init() {
-
-    }
-
-    addButtonResume() {
-      var pause_label = this.add.image(0, 0, 'buttonNew').setOrigin(0.5, 0.5);
-      let returnText = this.add.bitmapText(0, 0, 'mainFont', 'Resume', 40).setOrigin(0.5, 0.5);
-      this.containerButtonResume = this.add.container(this.sys.canvas.width / 2 - 200, 800, [ pause_label, returnText ]).setScrollFactor(0);
-      this.containerButtonResume.setSize(pause_label.width, pause_label.height);
-      this.containerButtonResume.setInteractive();
-      
-      this.containerButtonResume.on('pointerover', function() {
-        pause_label.setTint(0x44ff44);
-      });
-      this.containerButtonResume.on('pointerout', function () {
-
-          pause_label.clearTint();
-  
-      });
-  
-      this.containerButtonResume.on('pointerdown',  () => {
-        this.scene.stop('PauseScene');
-        this.scene.resume('GameScene');
-        let sceneGamePlaying = this.scene.get('GameScene');
-        sceneGamePlaying.scene.setVisible(true);
-      });
-    }
-
-    addButtonNewGame() {
-      let new_label = this.add.image(0, 0, 'buttonNew').setOrigin(0.5, 0.5);
-      let newText = this.add.bitmapText(0, 0, 'mainFont', 'New Game', 40).setOrigin(0.5, 0.5);
-      this.containerButtonNewGame = this.add.container(this.sys.canvas.width / 2 + 200, 800, [ new_label, newText ]).setScrollFactor(0);
-      this.containerButtonNewGame.setSize(new_label.width, new_label.height);
-      this.containerButtonNewGame.setInteractive();
-      
-      this.containerButtonNewGame.on('pointerover', function() {
-        new_label.setTint(0x44ff44);
-      });
-      this.containerButtonNewGame.on('pointerout', function () {
-
-          new_label.clearTint();
-  
-      });
-  
-      this.containerButtonNewGame.on('pointerdown',  () => {
-        this.scene.stop('PauseScene');
-        this.sound.removeAll();
-        this.scene.start('GameScene');
-      });
-    }
-
-    addButtonMute() {
-      let muteLabel = this.add.image(0, 0, 'buttonNew').setOrigin(0.5, 0.5);
-      let textMute;
-      if (this.game.sound.mute == true) textMute = 'Unmute';
-      else textMute = 'Mute';
-      let muteText = this.add.bitmapText(0, 0, 'mainFont', textMute, 40).setOrigin(0.5, 0.5);
-      this.muteButton = this.add.container(this.sys.canvas.width / 2, 600, [ muteLabel, muteText ]).setScrollFactor(0);
-      this.muteButton.setSize(muteLabel.width, muteLabel.height);
-      this.muteButton.setInteractive();
-      this.muteButton.on('pointerover', function() {
-        muteLabel.setTint(0x44ff44);
-      });
-      this.muteButton.on('pointerout', function () {
-
-        muteLabel.clearTint();
-  
-      });
-  
-      this.muteButton.on('pointerdown',  () => {
-        if (this.game.sound.mute == false) {
-        this.game.sound.mute = true;
-        muteText.setText('Unmute');
-        }
-        else {
-          this.game.sound.mute = false;
-          //muteLabel.clearTint();
-          muteText.setText('Mute');
-        }
-      });
-    }
 
     create() {
       this.scene.bringToTop();
+      //text "Pause Scene"
+      this.addTextPauseScene();
+      //resume
+      this.addButtonResume();
+      //new game
+      this.addButtonNewGame();
+      //mute
+      this.addButtonMute();
+      //yellow background
+      this.addBackGround();
+      //container of all button
+      this.addContainerScene();
+    }
 
-        this.bitmapTexts.push(
-            this.add.bitmapText(
-              this.sys.canvas.width / 2 - 120,
-              40,
-              'font',
-              'PAUSE SCENE',
-              30
-            )
-        );
-        
-        this.addButtonResume();
+    private addButtonResume() {
+      const buttonX = this.sys.canvas.width / 2 - 200;
+      const buttonY = 800;
+      let button = new Button(buttonX, buttonY, this, 'Resume');
+      this.containerButtonResume = button.create(this);
+      button.setInteract();
+      button.container.on('pointerdown', () => {
+        this.scene.stop('PauseScene');
+        this.scene.resume('GameScene');
+        let sceneGamePlaying = this.scene.get('GameScene');
+        sceneGamePlaying.scene.setVisible(true);        
+      })
+    }
 
-        //new game
-        this.addButtonNewGame();
-        //mute
-        this.addButtonMute();
-        let bg = this.add.image(800, 700, 'backGround').setScrollFactor(0).setOrigin(0.5, 0.5).setScale(1.5);
-        this.containerScene = this.add.container(-500, 0, [ bg, this.muteButton, this.containerButtonResume, this.containerButtonNewGame ]).setScrollFactor(0);
-        this.tweens.add({
-          targets: this.containerScene,
-          //to do
-          x: 0,
-          duration: 100,
-          ease: 'Sine.easeOut'
-        })
+    private addButtonNewGame() {
+      const buttonX = this.sys.canvas.width / 2 + 200;
+      const buttonY = 800;
+      let button = new Button(buttonX, buttonY, this, 'New Game');
+      this.containerButtonNewGame = button.create(this);
+      button.setInteract();
+      button.container.on('pointerdown', () => {
+        this.scene.stop('PauseScene');
+        this.sound.removeAll();
+        this.scene.start('GameScene');   
+      })
+    }
+
+    private addButtonMute() {
+      const buttonX = this.sys.canvas.width / 2;
+      const buttonY = 600;
+      let textMute;
+      if (this.game.sound.mute == true) textMute = 'Unmute';
+      else textMute = 'Mute';      
+      let button = new Button(buttonX, buttonY, this, textMute);
+      this.muteButton = button.create(this);
+      button.setInteract();
+      button.container.on('pointerdown', () => {
+        if (this.game.sound.mute == false) {
+          this.game.sound.mute = true;
+          button.text.setText('Unmute');
+        }
+        else {
+          this.game.sound.mute = false;
+          button.text.setText('Mute');
+        } 
+      })
+    }
+
+    private addBackGround() {
+      this.backGround = this.add.image(800, 700, 'backGround')
+        .setScrollFactor(0)
+        .setOrigin(0.5, 0.5)
+        .setScale(1.5);
+    }
+
+    private addTextPauseScene() {
+      this.bitmapTexts.push(
+        this.add.bitmapText(
+          this.sys.canvas.width / 2 - 120,
+          40,
+          'font',
+          'PAUSE SCENE',
+          30
+        )
+      );
+    }
+
+    private addContainerScene() {
+      this.containerScene = this.add.container(-500,
+         0, 
+        [ this.backGround, 
+          this.muteButton, 
+          this.containerButtonResume, 
+          this.containerButtonNewGame 
+        ]).setScrollFactor(0);
+      this.tweens.add({
+        targets: this.containerScene,
+        x: 0,
+        duration: 100,
+        ease: 'Sine.easeOut'
+      })
     }
 }

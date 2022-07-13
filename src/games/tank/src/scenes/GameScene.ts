@@ -7,7 +7,6 @@ export class GameScene extends Phaser.Scene {
   private map: Phaser.Tilemaps.Tilemap;
   private tileset: Phaser.Tilemaps.Tileset;
   private layer: Phaser.Tilemaps.TilemapLayer;
-
   private player: Player;
   private enemies: Phaser.GameObjects.Group;
   private obstacles: Phaser.GameObjects.Group;
@@ -50,7 +49,13 @@ export class GameScene extends Phaser.Scene {
       'Menu',
       50
     ).setOrigin(0.5, 0.5);
-    this.screenRec = this.add.rectangle(0, 0, this.sys.canvas.width*2, this.sys.canvas.height*2, 0x000000).setAlpha(0).setDepth(5000).setOrigin(0.5, 0.5).setScrollFactor(0);
+    const width = this.sys.canvas.width*2;
+    this.screenRec = this.add.rectangle(0, 0, width, this.sys.canvas.height*2, 0x000000)
+      .setAlpha(0)
+      .setDepth(5000)
+      .setOrigin(0.5, 0.5)
+      .setScrollFactor(0);
+  
     let container = this.add.container(0 + 200, 100, [ pauseLabel, menuText ]).setScrollFactor(0);
     container.setSize(pauseLabel.width, pauseLabel.height);
     container.setDepth(1000);
@@ -199,6 +204,7 @@ export class GameScene extends Phaser.Scene {
     this.addButtonMenu();
     this.addButtonScore();
   }
+
   updateScore() {
     this.textScore.setText(`Score ${this.registry.get('score')}`);
   }
@@ -266,27 +272,28 @@ export class GameScene extends Phaser.Scene {
 
   private bulletHitLayer(bullet: Bullet): void {
     if (bullet.scene) {
-    let emi = bullet.scene.add.particles('blue').createEmitter({
-      x: bullet.x,
-      y: bullet.y,
-      speed: { min: -800, max: 800 },
-      angle: { min: 0, max: 360 },
-      scale: { start: 0.5, end: 0 },
-      blendMode: 'SCREEN',
-      //active: false,
-      lifespan: 600,
-      gravityY: 800
-    });
-  
-    bullet.scene.time.addEvent({
-      delay: 100,
-      callback : () => {
-        emi.remove();
-        bullet.destroy();
-      }
-    })
-    bullet.destroy();
-  }
+      let emi = bullet.scene.add.particles('blue').createEmitter({
+        x: bullet.x,
+        y: bullet.y,
+        speed: { min: -800, max: 800 },
+        angle: { min: 0, max: 360 },
+        scale: { start: 0.5, end: 0 },
+        blendMode: 'SCREEN',
+        //active: false,
+        lifespan: 600,
+        gravityY: 800
+      });
+    
+      bullet.scene.time.addEvent({
+        delay: 100,
+        callback : () => {
+          emi.remove();
+          bullet.destroy();
+        }
+      })
+      
+      bullet.destroy();
+    }
   }
 
   private bulletHitObstacles(bullet: Bullet, obstacle: Obstacle): void {
@@ -316,7 +323,7 @@ export class GameScene extends Phaser.Scene {
 
   private enemyBulletHitPlayer(bullet: Bullet, player: Player): void {
     if (bullet.scene) {
-      let emi = bullet.scene.add.particles('smoke').createEmitter({
+      let smokeEmitter = bullet.scene.add.particles('smoke').createEmitter({
         x: player.x,
         y: player.y,
         speed: { min: -800, max: 800 },
@@ -332,7 +339,7 @@ export class GameScene extends Phaser.Scene {
         delay: 100,
         callback : () => {
           //emi.stop();
-          emi.remove();
+          smokeEmitter.remove();
           bullet.destroy();
         }
       })

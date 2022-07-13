@@ -1,5 +1,5 @@
 import { Bullet } from './Bullet';
-import { IImageConstructor } from '../interfaces/Image.Interface';
+import { IImageConstructor } from '../interfaces/IImageConstructor';
 
 export class Enemy extends Phaser.GameObjects.Image {
   body: Phaser.Physics.Arcade.Body;

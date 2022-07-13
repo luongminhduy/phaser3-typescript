@@ -32,54 +32,51 @@ export class GameScene extends Phaser.Scene {
     this.registry.set('score', 0);
   }
   
-  addSound() {
-    this.shootingSound = this.sound.add('shooting');
-    this.burningSound = this.sound.add('burning');
-    this.warSound = this.sound.add('war');
-    this.warSound.play();
-  }
-  addRectangle() {
-    const width = this.sys.canvas.width*2;
-    const height = this.sys.canvas.height*2;
-    this.screenRec = this.add.rectangle(0, 0, width, height, 0x000000)
-      .setAlpha(0)
-      .setDepth(5000)
-      .setOrigin(0.5, 0.5)
-      .setScrollFactor(0);
-  }
-
-  addMenuButton() {
-    let button = new Button(200, 100, this, 'Menu');
-    let menuButton = button.create(this);
-    button.setInteract();
-    button.container.on('pointerdown', () => {
-      this.screenRec.setAlpha(0.4);
-      this.scene.pause().launch('PauseScene');
-    })
-  }
-
-  addScoreButton() {
-    this.textScore = this.add.bitmapText(
-      //this.sys.canvas.width / 2 - 120,
-      //200,
-      0,
-      0,
-      'mainFont',
-      `Score  ${this.registry.get('score')}`,
-      50
-    ).setOrigin(0.5, 0.5);
-    this.textScore.setDepth(200);
-    let button = this.add.image(0, 0, 'buttonNew');
-    this.scoreContainer = this.add.container(this.sys.canvas.width - 200, 100, [button, this.textScore]).setScrollFactor(0);
-    this.scoreContainer.setDepth(1000);
-    this.scoreContainer.setInteractive();
-    this.events.on('scoreChanges', this.updateScore, this);
-  }
-
   create(): void {
     this.addSound();
     this.addRectangle();
     // create tilemap from tiled JSON
+    this.drawMap();
+    this.convertObjects();
+
+    // collider layer and obstacles
+    this.addCollider();
+
+    this.cameras.main.startFollow(this.player);
+    //shooting effect
+    this.addParticles();
+    this.addMenuButton();
+    this.addScoreButton();
+  }
+
+  update(): void {
+    this.player.update();
+    if (this.screenRec && !this.scene.isPaused('GameScene')) this.screenRec.setAlpha(0);
+    if (!this.player.active) {
+      this.sound.stopAll();
+    }
+    if (this.player.isShooting && this.shootingSound) {
+        this.shootingSound.play();
+        this.player.isShooting = false;
+    }
+
+    this.enemies.children.each((enemy: Enemy) => {
+      enemy.update();
+      if (this.player.active && enemy.active) {
+        var angle = Phaser.Math.Angle.Between(
+          enemy.body.x,
+          enemy.body.y,
+          this.player.body.x,
+          this.player.body.y
+        );
+
+        enemy.getBarrel().angle =
+          (angle + Math.PI / 2) * Phaser.Math.RAD_TO_DEG;
+      }
+    }, this);
+  }
+
+  private drawMap() {
     this.map = this.make.tilemap({ key: 'levelMap' });
 
     this.tileset = this.map.addTilesetImage('tiles');
@@ -94,9 +91,44 @@ export class GameScene extends Phaser.Scene {
     this.enemies = this.add.group({
       /*classType: Enemy*/
     });
-    this.convertObjects();
+  }
 
-    // collider layer and obstacles
+  private addParticles() {
+    this.shootingParticles = this.add.particles('smoke');
+
+    this.shootingEmitter = this.shootingParticles.createEmitter({
+        alpha: { start: 1, end: 0 },
+        scale: { start: 0.5, end: 2.5 },
+        tint: { start: 0xff945e, end: 0xff945e },
+        speed: 20,
+        accelerationY: -300,
+        angle: { min: -85, max: -95 },
+        rotate: { min: -180, max: 180 },
+        lifespan: { min: 400, max: 500 },
+        blendMode: 'ADD',
+        frequency: 60,
+        //maxParticles: 10,
+        x: -100,
+        y: -100,
+        on: false
+    });
+    //destroying effect
+    this.hitParticles = this.add.particles('blue');
+    this.hitEmitter = this.hitParticles.createEmitter({
+      x: 400,
+      y: 300,
+      speed: { min: -800, max: 800 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 0.5, end: 0 },
+      blendMode: 'SCREEN',
+      //active: false,
+      lifespan: 600,
+      gravityY: 800,
+      on: false
+    });
+  }
+
+  private addCollider() {
     this.physics.add.collider(this.player, this.layer);
     this.physics.add.collider(this.player, this.obstacles);
 
@@ -146,74 +178,54 @@ export class GameScene extends Phaser.Scene {
         null
       );
     }, this);
-
-    this.cameras.main.startFollow(this.player);
-    //shooting effect
-    this.shootingParticles = this.add.particles('smoke');
-
-    this.shootingEmitter = this.shootingParticles.createEmitter({
-        alpha: { start: 1, end: 0 },
-        scale: { start: 0.5, end: 2.5 },
-        tint: { start: 0xff945e, end: 0xff945e },
-        speed: 20,
-        accelerationY: -300,
-        angle: { min: -85, max: -95 },
-        rotate: { min: -180, max: 180 },
-        lifespan: { min: 400, max: 500 },
-        blendMode: 'ADD',
-        frequency: 60,
-        //maxParticles: 10,
-        x: -100,
-        y: -100,
-        on: false
-    });
-    //destroying effect
-    this.hitParticles = this.add.particles('blue');
-    this.hitEmitter = this.hitParticles.createEmitter({
-      x: 400,
-      y: 300,
-      speed: { min: -800, max: 800 },
-      angle: { min: 0, max: 360 },
-      scale: { start: 0.5, end: 0 },
-      blendMode: 'SCREEN',
-      //active: false,
-      lifespan: 600,
-      gravityY: 800,
-      on: false
-    });
-    this.addMenuButton();
-    this.addScoreButton();
   }
 
-  updateScore() {
+  private addSound() {
+    this.shootingSound = this.sound.add('shooting');
+    this.burningSound = this.sound.add('burning');
+    this.warSound = this.sound.add('war');
+    this.warSound.play();
+  }
+  private addRectangle() {
+    const width = this.sys.canvas.width*2;
+    const height = this.sys.canvas.height*2;
+    this.screenRec = this.add.rectangle(0, 0, width, height, 0x000000)
+      .setAlpha(0)
+      .setDepth(5000)
+      .setOrigin(0.5, 0.5)
+      .setScrollFactor(0);
+  }
+
+  private addMenuButton() {
+    let button = new Button(200, 100, this, 'Menu');
+    let menuButton = button.create(this);
+    button.setInteract();
+    button.container.on('pointerdown', () => {
+      this.screenRec.setAlpha(0.4);
+      this.scene.pause().launch('PauseScene');
+    })
+  }
+
+  private addScoreButton() {
+    this.textScore = this.add.bitmapText(
+      //this.sys.canvas.width / 2 - 120,
+      //200,
+      0,
+      0,
+      'mainFont',
+      `Score  ${this.registry.get('score')}`,
+      50
+    ).setOrigin(0.5, 0.5);
+    this.textScore.setDepth(200);
+    let button = this.add.image(0, 0, 'buttonNew');
+    this.scoreContainer = this.add.container(this.sys.canvas.width - 200, 100, [button, this.textScore]).setScrollFactor(0);
+    this.scoreContainer.setDepth(1000);
+    this.scoreContainer.setInteractive();
+    this.events.on('scoreChanges', this.updateScore, this);
+  }
+
+  private updateScore() {
     this.textScore.setText(`Score ${this.registry.get('score')}`);
-  }
-
-  update(): void {
-    this.player.update();
-    if (this.screenRec && !this.scene.isPaused('GameScene')) this.screenRec.setAlpha(0);
-    if (!this.player.active) {
-      this.sound.stopAll();
-    }
-    if (this.player.isShooting && this.shootingSound) {
-        this.shootingSound.play();
-        this.player.isShooting = false;
-    }
-
-    this.enemies.children.each((enemy: Enemy) => {
-      enemy.update();
-      if (this.player.active && enemy.active) {
-        var angle = Phaser.Math.Angle.Between(
-          enemy.body.x,
-          enemy.body.y,
-          this.player.body.x,
-          this.player.body.y
-        );
-
-        enemy.getBarrel().angle =
-          (angle + Math.PI / 2) * Phaser.Math.RAD_TO_DEG;
-      }
-    }, this);
   }
 
   private convertObjects(): void {

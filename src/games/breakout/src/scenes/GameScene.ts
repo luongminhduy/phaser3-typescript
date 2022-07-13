@@ -37,7 +37,6 @@ export class GameScene extends Phaser.Scene {
     this.emitterSmoke = this.particlesSmoke.createEmitter({
         alpha: { start: 1, end: 0 },
         scale: { start: 0.5, end: 2.5 },
-        //tint: { start: 0xff945e, end: 0xff945e },
         speed: 20,
         accelerationY: -300,
         angle: { min: -85, max: -95 },
@@ -45,7 +44,6 @@ export class GameScene extends Phaser.Scene {
         lifespan: { min: 400, max: 500 },
         blendMode: 'ADD',
         frequency: 60,
-        //maxParticles: 10,
         x: -100,
         y: -100
     });

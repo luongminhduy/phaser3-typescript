@@ -7,23 +7,19 @@ export class OverScene extends Phaser.Scene {
         });
     }
 
-    init() {
-
-    }
-
     addButtonNew() {
-      var new_label = this.add.image(0, 0, 'buttonNew').setOrigin(0.5, 0.5);
+      let newLabel = this.add.image(0, 0, 'buttonNew').setOrigin(0.5, 0.5);
       let newText = this.add.bitmapText(0, 0, 'mainFont', 'New Game', 40).setOrigin(0.5, 0.5);
-      this.containerButtonNewGame = this.add.container(this.sys.canvas.width / 2, 700, [ new_label, newText ]).setScrollFactor(0);
-      this.containerButtonNewGame.setSize(new_label.width, new_label.height);
+      this.containerButtonNewGame = this.add.container(this.sys.canvas.width / 2, 700, [ newLabel, newText ]).setScrollFactor(0);
+      this.containerButtonNewGame.setSize(newLabel.width, newLabel.height);
       this.containerButtonNewGame.setInteractive();
       
       this.containerButtonNewGame.on('pointerover', function() {
-        new_label.setTint(0x44ff44);
+        newLabel.setTint(0x44ff44);
       });
       this.containerButtonNewGame.on('pointerout', function () {
 
-          new_label.clearTint();
+          newLabel.clearTint();
   
       });
   

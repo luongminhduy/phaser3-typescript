@@ -14,10 +14,12 @@ export class GameScene extends Phaser.Scene {
       key: 'GameScene'
     });
   }
+
   init(): void {
     this.isPlayerJumping = false;
     settings.createTowerXPosition = 0;
   }
+  
   preload() {
     this.load.image('red', './assets/images/red.png');
   }

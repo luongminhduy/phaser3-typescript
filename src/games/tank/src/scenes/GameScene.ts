@@ -244,31 +244,36 @@ export class GameScene extends Phaser.Scene {
     const objects = this.map.getObjectLayer('objects').objects as any[];
 
     objects.forEach((object) => {
-      if (object.type === 'player') {
-        this.player = new Player({
-          scene: this,
-          x: object.x,
-          y: object.y,
-          texture: 'tankBlue'
-        });
-      } else if (object.type === 'enemy') {
-        let enemy = new Enemy({
-          scene: this,
-          x: object.x,
-          y: object.y,
-          texture: 'tankRed'
-        });
-
-        this.enemies.add(enemy);
-      } else {
-        let obstacle = new Obstacle({
-          scene: this,
-          x: object.x,
-          y: object.y - 40,
-          texture: object.type
-        });
-
-        this.obstacles.add(obstacle);
+      switch(object.type) {
+        case 'player': {
+          this.player = new Player({
+              scene: this,
+              x: object.x,
+              y: object.y,
+              texture: 'tankBlue'
+            });
+          break  
+        }  
+        case 'enemy': {
+          let enemy = new Enemy({
+              scene: this,
+              x: object.x,
+              y: object.y,
+              texture: 'tankRed'
+            });
+          this.enemies.add(enemy);
+          break
+        }
+        default: {
+          let obstacle = new Obstacle({
+            scene: this,
+            x: object.x,
+            y: object.y - 40,
+            texture: object.type
+          });
+          this.obstacles.add(obstacle);
+          break 
+        }
       }
     });
   }
@@ -374,6 +379,7 @@ export class GameScene extends Phaser.Scene {
     this.registry.set('score', getCurrentPoints + 10);
     this.events.emit('scoreChanges');
     let currentHighest = this.registry.get('highest');
-    if (getCurrentPoints + 10 > currentHighest) this.registry.set('highest', getCurrentPoints + 10);
+    if (getCurrentPoints + 10 > currentHighest)
+       this.registry.set('highest', getCurrentPoints + 10);
   }
 }

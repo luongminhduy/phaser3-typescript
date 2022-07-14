@@ -3,7 +3,7 @@ import { IImageConstructor } from '../interfaces/IImageConstructor';
 
 export class Enemy extends Phaser.GameObjects.Image {
   body: Phaser.Physics.Arcade.Body;
-
+  private damage: number = 0.05;
   // variables
   private health: number;
   private lastShoot: number;
@@ -16,13 +16,16 @@ export class Enemy extends Phaser.GameObjects.Image {
   // game objects
   private bullets: Phaser.GameObjects.Group;
   
-  damage: number = 0.05;
   public getBarrel(): Phaser.GameObjects.Image {
     return this.barrel;
   }
 
   public getBullets(): Phaser.GameObjects.Group {
     return this.bullets;
+  }
+
+  public getDamage(): number {
+    return this.damage;
   }
 
   constructor(aParams: IImageConstructor) {
@@ -120,9 +123,10 @@ export class Enemy extends Phaser.GameObjects.Image {
     this.lifeBar.setDepth(1);
   }
 
-  public updateHealth(): void {
+  public updateHealth(bulletDamage: number): void {
     if (this.health > 0) {
-      this.health -= 0.5;
+      //this.health -= 0.5;
+      this.health -= bulletDamage;
       this.redrawLifebar();
     } else {
       this.health = 0;

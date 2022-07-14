@@ -16,7 +16,7 @@ export class Player extends Phaser.GameObjects.Image {
 
   // game objects
   private bullets: Phaser.GameObjects.Group;
-  private bulletEnemy: Bullet;
+  private damage: number = 0.5;
   // input
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private rotateKeyLeft: Phaser.Input.Keyboard.Key;
@@ -28,6 +28,10 @@ export class Player extends Phaser.GameObjects.Image {
 
   public getBullets(): Phaser.GameObjects.Group {
     return this.bullets;
+  }
+
+  public getDamage(): number {
+    return this.damage;
   }
 
   constructor(aParams: IImageConstructor) {
@@ -196,9 +200,9 @@ export class Player extends Phaser.GameObjects.Image {
     this.lifeBar.setDepth(1);
   }
 
-  public updateHealth(): void {
+  public updateHealth(bulletDamage: number): void {
     if (this.health > 0) {
-      this.health -= 0.05;
+      this.health -= bulletDamage;
       this.redrawLifebar();
     } else {
       this.health = 0;

@@ -51,15 +51,8 @@ export class GameScene extends Phaser.Scene {
 
   update(): void {
     this.player.update();
-    if (this.screenRec && !this.scene.isPaused('GameScene')) this.screenRec.setAlpha(0);
-    if (!this.player.active) {
-      this.sound.stopAll();
-    }
-    if (this.player.isShooting && this.shootingSound) {
-        this.shootingSound.play();
-        this.player.isShooting = false;
-    }
-
+    this.updatePauseScreen();
+    this.updateSound();
     this.enemies.children.each((enemy: Enemy) => {
       enemy.update();
       if (this.player.active && enemy.active) {
@@ -74,6 +67,20 @@ export class GameScene extends Phaser.Scene {
           (angle + Math.PI / 2) * Phaser.Math.RAD_TO_DEG;
       }
     }, this);
+  }
+
+  private updatePauseScreen() {
+    if (this.screenRec && !this.scene.isPaused('GameScene')) this.screenRec.setAlpha(0);
+  }
+
+  private updateSound() {
+    if (!this.player.active) {
+      this.sound.stopAll();
+    }
+    if (this.player.isShooting && this.shootingSound) {
+        this.shootingSound.play();
+        this.player.isShooting = false;
+    }
   }
 
   private drawMap() {
@@ -218,7 +225,11 @@ export class GameScene extends Phaser.Scene {
     ).setOrigin(0.5, 0.5);
     this.textScore.setDepth(200);
     let button = this.add.image(0, 0, 'buttonNew');
-    this.scoreContainer = this.add.container(this.sys.canvas.width - 200, 100, [button, this.textScore]).setScrollFactor(0);
+    this.scoreContainer = this.add.container (
+      this.sys.canvas.width - 200,
+       100,
+       [button, this.textScore]
+      ).setScrollFactor(0);
     this.scoreContainer.setDepth(1000);
     this.scoreContainer.setInteractive();
     this.events.on('scoreChanges', this.updateScore, this);
@@ -337,7 +348,7 @@ export class GameScene extends Phaser.Scene {
       })
       bullet.destroy();
     }
-    player.updateHealth();
+    player.updateHealth(bullet.damage);
   }
 
   private playerBulletHitEnemy(bullet: Bullet, enemy: Enemy): void {
@@ -354,7 +365,7 @@ export class GameScene extends Phaser.Scene {
     if (this.burningSound)
       this.burningSound.play();
     bullet.destroy();
-    enemy.updateHealth();
+    enemy.updateHealth(this.player.getDamage());
     this.addScore();
   }
   

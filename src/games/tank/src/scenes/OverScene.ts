@@ -14,17 +14,17 @@ export class OverScene extends Phaser.Scene {
       //Your score text
       this.addText(this.sys.canvas.width / 2 - 120, 100, 'Your Score is ');
       //score
-      this.addScore(this.sys.canvas.width / 2 - 80, 200, 'score');
+      this.addScore(this.sys.canvas.width / 2 - 60, 200, 'score');
       //Highest score text
       this.addText(this.sys.canvas.width / 2 - 120, 400, 'Highest Score ');
       //Highest
-      this.addScore(this.sys.canvas.width / 2 - 80, 500, 'highest');
+      this.addScore(this.sys.canvas.width / 2 - 60, 500, 'highest');
       //Button for new game
       this.addButtonNew();
     }
 
     private addButtonNew() {
-      const buttonX = this.sys.canvas.width / 2;
+      const buttonX = this.sys.canvas.width / 2 - 15;
       const buttonY = 700;
       let button = new Button(buttonX, buttonY, this, 'New Game');
       this.containerButtonNewGame = button.create(this);

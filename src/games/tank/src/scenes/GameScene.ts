@@ -370,7 +370,7 @@ export class GameScene extends Phaser.Scene {
     if (this.burningSound)
       this.burningSound.play();
     bullet.destroy();
-    enemy.updateHealth(this.player.getDamage());
+    enemy.updateHealth(bullet.damage*10);
     this.addScore();
   }
   

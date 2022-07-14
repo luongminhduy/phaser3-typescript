@@ -132,9 +132,7 @@ export class Player extends Phaser.GameObjects.Image {
     // rotate tank
 
     // rotate barrel
-  //   this.scene.input.on('pointermove', ()=> {
-  //     console.log("Pointer Move");
-  // });
+ 
     if (this.rotateKeyLeft.isDown) {
       this.barrel.rotation -= 0.05;
       
